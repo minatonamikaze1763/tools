@@ -31,9 +31,9 @@
     <main>
       <section class="hero">
         <div class="eyebrow">A LITTLE EXTRA. A LOT LESS WORK.</div>
-        <h1>Your documents.<br /><span>Ready for what’s next.</span></h1>
+        <h1>Less busywork.<br /><span>More done.</span></h1>
         <p>
-          16 PDF and image tools. One focused workspace.<br />Your everyday
+          20 PDF and image tools. One focused workspace.<br />Your everyday
           toolkit, included with Starter and Pro.
         </p>
         <div class="pills">
@@ -72,16 +72,16 @@
       <div class="workspace-head">
         <div>
           <span class="eyebrow">THE TOOLKIT</span>
-          <h2>Small tasks. Sorted.</h2>
+          <h2>What would you like to do?</h2>
         </div>
-        <p id="membership">16 tools. One workspace.</p>
+        <p id="membership">20 tools. One workspace.</p>
       </div>
       <div class="tool-toolbar">
         <div class="tool-filters" role="group" aria-label="Filter tools">
-          <button data-filter="all" aria-pressed="true">All 16 tools</button
+          <button data-filter="all" aria-pressed="true">All 20 tools</button
           ><button data-filter="pdf" aria-pressed="false">PDF tools · 10</button
           ><button data-filter="image" aria-pressed="false">
-            Image tools · 6
+            Image tools · 10
           </button>
         </div>
         <label class="search-label"
@@ -91,7 +91,7 @@
             placeholder="Search tools…"
         /></label>
       </div>
-      <p id="filterStatus" role="status">16 tools available</p>
+      <p id="filterStatus" role="status">20 tools available</p>
       <section class="tools" id="tools" aria-label="Available tools"></section>
       <section id="editor" class="editor" hidden>
         <div class="editor-heading">
@@ -102,14 +102,16 @@
           <button id="closeEditor" aria-label="Close tool">✕</button>
         </div>
         <p id="toolDescription"></p>
-        <label class="drop" id="drop"
-          >Choose files or drop them here<input
-            type="file"
-            id="files"
-            multiple /><small id="fileHint"></small
-        ></label>
+        <div class="editor-steps"><span>01 · Add files</span><span>02 · Adjust settings</span><span>03 · Download</span></div>
+        <label class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files to process">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg>
+          <strong>Drop your files here</strong><span class="choose-button">Choose files <span aria-hidden="true">＋</span></span>
+          <small id="fileHint"></small><input type="file" id="files" multiple />
+        </label>
+        <p id="selectionCount" class="selection-count">No files selected yet</p>
         <ol id="fileList"></ol>
-        <div id="options"></div>
+        <p id="loginReminder" class="note">Preview and arrange your files here. Sign in above when you’re ready to process.</p>
+        <div id="options"></div><div id="cropGuide" aria-label="Crop or privacy mask preview"></div>
         <p class="note" id="toolNote"></p>
         <button class="primary" id="run">Process files ↗</button
         ><button id="cancel" hidden>Cancel</button>
@@ -132,6 +134,7 @@
     </footer>
     <script src="vendor/pdf-lib.min.js"></script>
     <script src="vendor/jszip.min.js"></script>
+    <script>document.getElementById("drop").addEventListener("keydown", e => {if(e.key === "Enter" || e.key === " "){e.preventDefault();document.getElementById("files").click();}});</script>
     <script type="module" src="app.js"></script>
   </body>
 </html>
