@@ -102,16 +102,40 @@
           <button id="closeEditor" aria-label="Close tool">✕</button>
         </div>
         <p id="toolDescription"></p>
-        <div class="editor-steps"><span>01 · Add files</span><span>02 · Adjust settings</span><span>03 · Download</span></div>
-        <label class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files to process">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg>
-          <strong>Drop your files here</strong><span class="choose-button">Choose files <span aria-hidden="true">＋</span></span>
+        <div class="editor-steps">
+          <span>01 · Add files</span><span>02 · Adjust settings</span
+          ><span>03 · Download</span>
+        </div>
+        <label
+          class="drop"
+          id="drop"
+          tabindex="0"
+          role="button"
+          aria-label="Choose files to process"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6" />
+          </svg>
+          <strong>Drop your files here</strong
+          ><span class="choose-button"
+            >Choose files <span aria-hidden="true">＋</span></span
+          >
           <small id="fileHint"></small><input type="file" id="files" multiple />
         </label>
         <p id="selectionCount" class="selection-count">No files selected yet</p>
         <ol id="fileList"></ol>
-        <p id="loginReminder" class="note">Preview and arrange your files here. Sign in above when you’re ready to process.</p>
-        <div id="options"></div><div id="cropGuide" aria-label="Crop or privacy mask preview"></div>
+        <p id="loginReminder" class="note">
+          Preview and arrange your files here. Sign in above when you’re ready
+          to process.
+        </p>
+        <div id="options"></div>
+        <div id="cropGuide" aria-label="Crop or privacy mask preview"></div>
         <p class="note" id="toolNote"></p>
         <button class="primary" id="run">Process files ↗</button
         ><button id="cancel" hidden>Cancel</button>
@@ -134,7 +158,24 @@
     </footer>
     <script src="vendor/pdf-lib.min.js"></script>
     <script src="vendor/jszip.min.js"></script>
-    <script>document.getElementById("drop").addEventListener("keydown", e => {if(e.key === "Enter" || e.key === " "){e.preventDefault();document.getElementById("files").click();}});</script>
-    <script type="module" src="app.js"></script>
+    <script>
+      document.getElementById("drop").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          document.getElementById("files").click();
+        }
+      });
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "pdf-lib": "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm",
+          "xlsx": "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm",
+          "qrcode": "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm"
+        }
+      }
+    </script>
+
+    <script type="module" src="./app.js"></script>
   </body>
 </html>

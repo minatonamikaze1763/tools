@@ -93,9 +93,9 @@ export default {
     }
   },
 
-  init() {},
+  init() { },
 
-  cleanup() {},
+  cleanup() { },
 
   validate(files) {
     if (!files.length) return { valid: false, error: 'Choose at least one text file.' };
@@ -120,10 +120,19 @@ export default {
     const toSnakeCase = (str) => str.replace(/[-\s]+/g, '_').replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '').replace(/__+/g, '_');
     const toKebabCase = (str) => str.replace(/[_\s]+/g, '-').replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '').replace(/--+/g, '-');
     const toPascalCase = (str) => str.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '').replace(/^./, c => c.toUpperCase());
+    const htmlEncode = (str) => String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
 
-    const htmlEncode = (str) => str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, ''');
-    const htmlDecode = (str) => str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, "'");
-
+    const htmlDecode = (str) => String(str)
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;|&apos;/g, "'")
+      .replace(/&amp;/g, '&');
     const results = [];
 
     for (let i = 0; i < files.length; i++) {
