@@ -3,7 +3,21 @@
  * Generate 1D and 2D barcodes (Code128, EAN, UPC, etc.)
  */
 
-import bwipjs from 'bwip-js';
+// Load bwip-js from vendor
+let bwipjs = null;
+async function loadBwipjs() {
+  if (bwipjs) return bwipjs;
+  // Load the minified bundle
+  const script = document.createElement('script');
+  script.src = '/tools/vendor/bwip-js.min.js';
+  document.head.appendChild(script);
+  await new Promise((resolve, reject) => {
+    script.onload = resolve;
+    script.onerror = reject;
+  });
+  bwipjs = window.bwipjs;
+  return bwipjs;
+}
 
 const BARCODE_TYPES = {
   code128: { label: 'Code 128', desc: 'Alphanumeric, variable length' },
