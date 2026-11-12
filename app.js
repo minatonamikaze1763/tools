@@ -66,32 +66,32 @@ async function registerTools() {
   const registry = ToolRegistry.getInstance();
 
   // PDF Tools
-  registry.register(await import('./tools/pdf/pdf-compressor.js'));
-  registry.register(await import('./tools/pdf/pdf-merger.js'));
-  registry.register(await import('./tools/pdf/pdf-splitter.js'));
-  registry.register(await import('./tools/pdf/pdf-to-image.js'));
-  registry.register(await import('./tools/pdf/images-to-pdf.js'));
+  registry.register(await import('./tools/tools/pdf/pdf-compressor.js'));
+  registry.register(await import('./tools/tools/pdf/pdf-merger.js'));
+  registry.register(await import('./tools/tools/pdf/pdf-splitter.js'));
+  registry.register(await import('./tools/tools/pdf/pdf-to-image.js'));
+  registry.register(await import('./tools/tools/pdf/images-to-pdf.js'));
 
   // Image Tools
-  registry.register(await import('./tools/image/image-compressor.js'));
-  registry.register(await import('./tools/image/image-resizer.js'));
-  registry.register(await import('./tools/image/image-converter.js'));
-  registry.register(await import('./tools/image/image-watermark.js'));
-  registry.register(await import('./tools/image/image-cleanup.js'));
+  registry.register(await import('./tools/tools/image/image-compressor.js'));
+  registry.register(await import('./tools/tools/image/image-resizer.js'));
+  registry.register(await import('./tools/tools/image/image-converter.js'));
+  registry.register(await import('./tools/tools/image/image-watermark.js'));
+  registry.register(await import('./tools/tools/image/image-cleanup.js'));
 
   // Text/Data Tools
-  registry.register(await import('./tools/text/text-toolkit.js'));
-  registry.register(await import('./tools/text/json-toolkit.js'));
-  registry.register(await import('./tools/text/csv-excel-toolkit.js'));
-  registry.register(await import('./tools/text/qr-generator.js'));
-  registry.register(await import('./tools/text/barcode-generator.js'));
+  registry.register(await import('./tools/tools/text/text-toolkit.js'));
+  registry.register(await import('./tools/tools/text/json-toolkit.js'));
+  registry.register(await import('./tools/tools/text/csv-excel-toolkit.js'));
+  registry.register(await import('./tools/tools/text/qr-generator.js'));
+  registry.register(await import('./tools/tools/text/barcode-generator.js'));
 
   // Developer/Productivity Tools
-  registry.register(await import('./tools/developer/encoder-decoder.js'));
-  registry.register(await import('./tools/developer/hash-generator.js'));
-  registry.register(await import('./tools/developer/date-calculator.js'));
-  registry.register(await import('./tools/developer/calculator-converter.js'));
-  registry.register(await import('./tools/developer/file-organizer.js'));
+  registry.register(await import('./tools/tools/dev/encoder-decoder.js'));
+  registry.register(await import('./tools/tools/dev/hash-generator.js'));
+  registry.register(await import('./tools/tools/dev/date-calculator.js'));
+  registry.register(await import('./tools/tools/dev/calculator-converter.js'));
+  registry.register(await import('./tools/tools/dev/file-organizer.js'));
 
   console.log(`[NDC Tools] Registered ${registry.getAll().length} tools`);
 }
