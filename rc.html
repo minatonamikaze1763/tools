@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bulk PDF Pair Merger</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        text-align: center;
+        padding: 40px;
+      }
+
+      .box {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      input {
+        margin: 20px 0;
+      }
+
+      button {
+        padding: 12px 24px;
+        border: none;
+        background: #0066ff;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #status {
+        margin-top: 20px;
+        text-align: left;
+        white-space: pre-wrap;
+      }
+      a {
+        margin-top: 20px;
+        display: inline-block;
+
+        margin-bottom: 20px;
+        color: #0066ff;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="index.html">GO TO HOME</a>
+    <div class="box">
+      <h2>Bulk PDF Pair Merger</h2>
+
+      <input type="file" id="files" multiple accept=".pdf" />
+
+      <br />
+
+      <button onclick="mergeAll()">Merge & Download ZIP</button>
+
+      <div id="status"></div>
+    </div>
+
+    <script>
+      async function mergeAll() {
+        const input = document.getElementById("files");
+
+        if (!input.files.length) {
+          alert("Select PDFs first");
+          return;
+        }
+
+        const status = document.getElementById("status");
+        status.textContent = "Processing...\n";
+
+        const groups = {};
+
+        for (const file of input.files) {
+          let match = file.name.match(/^(.*?)\s+([12])\.pdf$/i);
+
+          let baseName, part;
+
+          if (match) {
+            baseName = match[1].trim();
+            part = match[2];
+          } else {
+            match = file.name.match(/^(.*?)(2?)\.pdf$/i);
+
+            if (!match) continue;
+
+            baseName = match[1].trim();
+            part = match[2] === "2" ? "2" : "1";
+          }
+
+          if (!groups[baseName]) groups[baseName] = {};
+
+          groups[baseName][part] = file;
+        }
+        const zip = new JSZip();
+
+        let mergedCount = 0;
+
+        for (const name in groups) {
+          const pair = groups[name];
+
+          if (!pair["1"] || !pair["2"]) {
+            status.textContent += `Skipped: ${name}\n`;
+            continue;
+          }
+
+          const mergedPdf = await PDFLib.PDFDocument.create();
+
+          for (const part of ["1", "2"]) {
+            const bytes = await pair[part].arrayBuffer();
+
+            const srcPdf = await PDFLib.PDFDocument.load(bytes);
+
+            const pages = await mergedPdf.copyPages(
+              srcPdf,
+              srcPdf.getPageIndices(),
+            );
+
+            pages.forEach((page) => mergedPdf.addPage(page));
+          }
+
+          const mergedBytes = await mergedPdf.save();
+
+          zip.file(`${name} RC.pdf`, mergedBytes);
+
+          mergedCount++;
+
+          status.textContent += `Merged: ${name}\n`;
+        }
+
+        status.textContent += `\nCreating ZIP...`;
+
+        const zipBlob = await zip.generateAsync({
+          type: "blob",
+        });
+
+        const a = document.createElement("a");
+
+        a.href = URL.createObjectURL(zipBlob);
+
+        a.download = "merged_pdfs.zip";
+
+        a.click();
+
+        status.textContent += `\nDone.\nMerged PDFs: ${mergedCount}`;
+      }
+    </script>
+  </body>
+</html>

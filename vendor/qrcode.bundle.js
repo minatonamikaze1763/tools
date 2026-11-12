@@ -1,1 +1,0 @@
-Couldn't find the requested file /lib/qrcode.js in qrcode.

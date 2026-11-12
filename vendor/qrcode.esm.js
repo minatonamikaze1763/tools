@@ -1,1 +1,0 @@
-Couldn't find the requested file /dist/esm/index.js in qrcode.

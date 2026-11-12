@@ -1,30 +1,198 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>NDC Tools — Your everyday document toolkit</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="20 premium PDF, image, text, and developer tools included with active NDC Starter and Pro subscriptions."
+      content="All-in-one PDF Tool - Convert, Edit, Organize, and Merge PDFs easily."
     />
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png" />
-    <link rel="shortcut icon" type="image/png" href="logo.png" />
-    <link rel="apple-touch-icon" href="logo.png" />
+    <meta name="author" content="Nandhu" />
+    <title>PDF Tool By MinaByte</title>
+    <!-- 🔹 Libraries -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <!-- PDF.js (for reading PDF text) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+    </script>
+
+    <!-- docx library – use a version known to expose global -->
+    <script src="https://unpkg.com/docx@7.8.2/build/index.umd.js"></script>
+    <script>
+      /*if (!window.docx) {
+      console.error("docx library not loaded properly!");
+    } else {
+      console.log("docx version loaded:", window.docx.version);
+    }*/
+    </script>
+
+    <!-- JSZip (for zipping multiple .docx files) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- pdf-lib (used elsewhere, not required for PDF→Word conversion) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+    <!-- XLSX and FileSaver (used in other tools) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
-    <!-- App is rendered by Dashboard.js and ToolWorkspace.js -->
-    <script type="importmap">
-      {
-        "imports": {
-          "pdf-lib": "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm",
-          "xlsx": "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm",
-          "qrcode": "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm"
-        }
-      }
-    </script>
-    <script type="module" src="./app.js"></script>
+    <div class="app-layout">
+      <!-- ✅ Sidebar -->
+
+      <aside class="sidebar">
+        <h2><i class="fa-solid fa-file-pdf"></i> PDF Tools</h2>
+
+        <div class="tool-section">
+          <h3>Organize PDFs</h3>
+          <ul>
+            <li>
+              <a href="#" class="active" data-tool="merge"
+                ><i class="fa-solid fa-code-merge"></i> Merge PDFs</a
+              >
+            </li>
+
+            <li>
+              <a href="#" data-tool="allMerge">
+                <i class="fa-solid fa-layer-group"></i>
+                All-in-One PDF Merger
+              </a>
+            </li>
+
+            <li>
+              <a href="#" data-tool="split"
+                ><i class="fa-solid fa-arrows-split-up-and-left"></i> Split
+                PDF</a
+              >
+            </li>
+            <!--       <li><a href="#" data-tool="edit"><i class="fa-solid fa-pen-to-square"></i> Edit Text</a></li>
+ -->
+          </ul>
+        </div>
+
+        <div class="tool-section">
+          <h3>Convert from PDF</h3>
+          <ul>
+            <li>
+              <a href="#" data-tool="pdfToJpg"
+                ><i class="fa-solid fa-file-image"></i> PDF to JPG</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="tool-section">
+          <h3>Convert to PDF</h3>
+          <ul>
+            <li>
+              <a href="#" data-tool="jpgToPdf"
+                ><i class="fa-solid fa-file-image"></i> JPG to PDF</a
+              >
+            </li>
+            <li>
+              <a href="#" data-tool="excelToPdf"
+                ><i class="fa-solid fa-file-excel"></i> Excel to PDF</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- 🔥 NEW SECTION -->
+        <div class="tool-section">
+          <h3>Compression</h3>
+          <ul>
+            <li>
+              <a href="#" data-tool="compressPdf"
+                ><i class="fa-solid fa-file-zipper"></i> Compress PDF</a
+              >
+            </li>
+            <li>
+              <a href="#" data-tool="compressImg"
+                ><i class="fa-solid fa-image"></i> Compress Images</a
+              >
+            </li>
+          </ul>
+        </div>
+        <a href="rc.html"
+          ><i class="fa-solid fa-code-merge"></i> Rc Merge PDFs</a
+        >
+      </aside>
+      <!-- ✅ Main Workspace -->
+      <main class="workspace" id="workspace">
+        <!-- ✅ DEFAULT TOOL (Merge PDF) -->
+        <div class="container" id="mergeTool">
+          <h1><i class="fa-solid fa-code-merge"></i> Merge PDF Files</h1>
+
+          <label class="dropZone" id="mergeDropZone" for="mergePdfFiles">
+            Drag & Drop or Click to Upload PDF Files
+          </label>
+
+          <input type="file" id="mergePdfFiles" multiple accept=".pdf" />
+
+          <button id="mergeGenerateBtn">Generate Merged PDF</button>
+
+          <div id="mergeStatus" class="status"></div>
+          <div id="mergeFileList"></div>
+        </div>
+
+        <!-- 🔥 COMPRESS PDF TOOL -->
+        <div class="container" id="compressPdfTool" style="display: none">
+          <h1><i class="fa-solid fa-file-zipper"></i> Compress PDF</h1>
+
+          <label class="dropZone" for="pdfCompressInput">
+            Drop or Select PDF Files
+          </label>
+
+          <input type="file" id="pdfCompressInput" multiple accept=".pdf" />
+          <input
+            type="number"
+            id="pdfTargetSize"
+            placeholder="Target size (KB)"
+          />
+
+          <div id="pdfCompressList" class="file-list"></div>
+
+          <button id="compressPdfBtn">Compress PDF</button>
+          <div id="pdfCompressStatus" class="status"></div>
+        </div>
+
+        <!-- 🔥 COMPRESS IMAGE TOOL -->
+        <div class="container" id="compressImgTool" style="display: none">
+          <h1><i class="fa-solid fa-image"></i> Compress Images</h1>
+
+          <label class="dropZone" for="imgCompressInput">
+            Drop or Select Images
+          </label>
+
+          <input type="file" id="imgCompressInput" multiple accept="image/*" />
+          <input
+            type="number"
+            id="imgTargetSize"
+            placeholder="Target size (KB)"
+          />
+
+          <div id="imgCompressList" class="file-list"></div>
+
+          <button id="compressImgBtn">Compress Images</button>
+          <div id="imgCompressStatus" class="status"></div>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
