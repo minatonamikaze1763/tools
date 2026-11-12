@@ -8,13 +8,18 @@
       content="All-in-one PDF Tool - Convert, Edit, Organize, and Merge PDFs easily."
     />
     <meta name="author" content="Nandhu" />
-    <title>PDF Tool By MinaByte</title>
+    <title>PDF Tools | Next Dimension Customs</title>
     <!-- 🔹 Libraries -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
 
+    <!-- Apple / iPhone Icon -->
+    <link rel="apple-touch-icon" href="logo.png" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <!-- PDF.js (for reading PDF text) -->
@@ -51,10 +56,19 @@
   </head>
 
   <body>
+    <a class="skip" href="#workspace">Skip to workspace</a>
+    <header class="masthead">
+      <div class="brand">
+        <img src="logo.png" width="44" height="44" alt="" /><span
+          >Next Dimension Customs</span
+        >
+      </div>
+      <span class="suite">NDC Tools</span>
+    </header>
     <div class="app-layout">
       <!-- ✅ Sidebar -->
 
-      <aside class="sidebar">
+      <nav class="sidebar" aria-label="PDF tools">
         <h2><i class="fa-solid fa-file-pdf"></i> PDF Tools</h2>
 
         <div class="tool-section">
@@ -130,9 +144,9 @@
         <a href="rc.html"
           ><i class="fa-solid fa-code-merge"></i> Rc Merge PDFs</a
         >
-      </aside>
+      </nav>
       <!-- ✅ Main Workspace -->
-      <main class="workspace" id="workspace">
+      <main class="workspace" id="workspace" tabindex="-1">
         <!-- ✅ DEFAULT TOOL (Merge PDF) -->
         <div class="container" id="mergeTool">
           <h1><i class="fa-solid fa-code-merge"></i> Merge PDF Files</h1>

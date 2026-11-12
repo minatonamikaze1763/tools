@@ -1,72 +1,44 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bulk PDF Pair Merger</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="shortcut icon" type="image/png" href="logo.png" />
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        text-align: center;
-        padding: 40px;
-      }
-
-      .box {
-        max-width: 700px;
-        margin: auto;
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      }
-
-      input {
-        margin: 20px 0;
-      }
-
-      button {
-        padding: 12px 24px;
-        border: none;
-        background: #0066ff;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-
-      #status {
-        margin-top: 20px;
-        text-align: left;
-        white-space: pre-wrap;
-      }
-      a {
-        margin-top: 20px;
-        display: inline-block;
-
-        margin-bottom: 20px;
-        color: #0066ff;
-        font-weight: bold;
-      }
-    </style>
+    <!-- Apple / iPhone Icon -->
+    <link rel="apple-touch-icon" href="logo.png" />
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <a href="index.html">GO TO HOME</a>
-    <div class="box">
-      <h2>Bulk PDF Pair Merger</h2>
+  <body class="bulk-page">
+    <header class="masthead">
+      <div class="brand">
+        <img src="logo.png" width="44" height="44" alt="" /><span
+          >Next Dimension Customs</span
+        >
+      </div>
+      <span class="suite">NDC Tools</span>
+    </header>
+    <main class="bulk-workspace">
+      <a href="index.html">Back to PDF tools</a>
+      <div class="box">
+        <h1>Bulk PDF Pair Merger</h1>
+        <label for="files">Select PDF pairs</label>
 
-      <input type="file" id="files" multiple accept=".pdf" />
+        <input type="file" id="files" multiple accept=".pdf" />
 
-      <br />
+        <br />
 
-      <button onclick="mergeAll()">Merge & Download ZIP</button>
+        <button onclick="mergeAll()">Merge & Download ZIP</button>
 
-      <div id="status"></div>
-    </div>
-
+        <div id="status" role="status"></div>
+      </div>
+    </main>
     <script>
       async function mergeAll() {
         const input = document.getElementById("files");
