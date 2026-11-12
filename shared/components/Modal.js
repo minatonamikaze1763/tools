@@ -169,6 +169,71 @@ export class Modal {
   static isOpen(id) {
     return this.modals.has(id);
   }
+
+  /**
+   * Initialize a static modal already present in the DOM
+   * For modals rendered in HTML (like Keyboard Shortcuts)
+   */
+  static initStatic(id, options = {}) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return null;
+
+    const modal = overlay.querySelector('.modal');
+    if (!modal) return null;
+
+    const { title, closable = true, onClose } = options;
+
+    // Store reference
+    this.modals.set(id, { overlay, modal, onClose, title, static: true });
+
+    // Bind events
+    if (closable) {
+      const closeBtn = overlay.querySelector('.modal-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => this.close(id));
+      }
+    }
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) this.close(id);
+    });
+
+    // Escape key
+    const escapeHandler = (e) => {
+      if (e.key === 'Escape' && this.activeModal === id) {
+        this.close(id);
+      }
+    };
+    document.addEventListener('keydown', escapeHandler);
+    overlay._escapeHandler = escapeHandler;
+
+    // Trap focus
+    this.trapFocus(modal);
+
+    return {
+      open: () => this.openStatic(id),
+      close: () => this.close(id),
+    };
+  }
+
+  static openStatic(id) {
+    const modalData = this.modals.get(id);
+    if (!modalData || !modalData.static) return;
+
+    const { overlay, modal } = modalData;
+
+    // Show with animation
+    requestAnimationFrame(() => {
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      this.activeModal = id;
+      this.focusStack.push(document.activeElement);
+
+      // Focus management
+      const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusable) focusable.focus();
+      else modal.focus();
+    });
+  }
 }
 
 // Confirmation dialog helper

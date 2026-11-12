@@ -6,166 +6,16 @@
     <title>NDC Tools — Your everyday document toolkit</title>
     <meta
       name="description"
-      content="PDF and image tools included with active NDC Starter and Pro subscriptions."
+      content="20 premium PDF, image, text, and developer tools included with active NDC Starter and Pro subscriptions."
     />
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png" />
     <link rel="shortcut icon" type="image/png" href="logo.png" />
-
-    <!-- Apple / iPhone Icon -->
     <link rel="apple-touch-icon" href="logo.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header>
-      <a class="brand" href="#"
-        ><img src="logo.png" alt="" /><span
-          >NDC<span class="sub">TOOLS WORKSPACE</span></span
-        ></a
-      >
-      <nav>
-        <a href="https://vahan.nextdimensioncustoms.in/">My subscription ↗</a
-        ><button id="logout" hidden>Sign out</button>
-      </nav>
-    </header>
-    <main>
-      <section class="hero">
-        <div class="eyebrow">A LITTLE EXTRA. A LOT LESS WORK.</div>
-        <h1>Less busywork.<br /><span>More done.</span></h1>
-        <p>
-          20 PDF and image tools. One focused workspace.<br />Your everyday
-          toolkit, included with Starter and Pro.
-        </p>
-        <div class="pills">
-          <span>✦ Included with ₹499 & ₹799 plans</span
-          ><span>◇ Files stay in your browser</span>
-        </div>
-      </section>
-      <section class="access" id="access">
-        <div>
-          <span class="eyebrow">YOUR MEMBERSHIP BONUS</span>
-          <h2>One account. More possibilities.</h2>
-          <p>
-            Sign in with your Customer Admin Panel credentials to unlock the
-            toolkit.
-          </p>
-        </div>
-        <form id="loginForm">
-          <label
-            >Panel username<input
-              id="username"
-              autocomplete="username"
-              placeholder="yourname_admin"
-              required /></label
-          ><label
-            >Password<input
-              id="password"
-              autocomplete="current-password"
-              type="password"
-              required /></label
-          ><button class="primary" id="loginButton">Unlock my tools ↗</button>
-          <p id="authStatus" role="status">
-            Active Starter or Pro subscription required.
-          </p>
-        </form>
-      </section>
-      <div class="workspace-head">
-        <div>
-          <span class="eyebrow">THE TOOLKIT</span>
-          <h2>What would you like to do?</h2>
-        </div>
-        <p id="membership">20 tools. One workspace.</p>
-      </div>
-      <div class="tool-toolbar">
-        <div class="tool-filters" role="group" aria-label="Filter tools">
-          <button data-filter="all" aria-pressed="true">All 20 tools</button
-          ><button data-filter="pdf" aria-pressed="false">PDF tools · 10</button
-          ><button data-filter="image" aria-pressed="false">
-            Image tools · 10
-          </button>
-        </div>
-        <label class="search-label"
-          >Find a tool<input
-            id="toolSearch"
-            type="search"
-            placeholder="Search tools…"
-        /></label>
-      </div>
-      <p id="filterStatus" role="status">20 tools available</p>
-      <section class="tools" id="tools" aria-label="Available tools"></section>
-      <section id="editor" class="editor" hidden>
-        <div class="editor-heading">
-          <div>
-            <span class="eyebrow">LET’S GET IT DONE</span>
-            <h2 id="toolTitle"></h2>
-          </div>
-          <button id="closeEditor" aria-label="Close tool">✕</button>
-        </div>
-        <p id="toolDescription"></p>
-        <div class="editor-steps">
-          <span>01 · Add files</span><span>02 · Adjust settings</span
-          ><span>03 · Download</span>
-        </div>
-        <label
-          class="drop"
-          id="drop"
-          tabindex="0"
-          role="button"
-          aria-label="Choose files to process"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.6"
-            aria-hidden="true"
-          >
-            <path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6" />
-          </svg>
-          <strong>Drop your files here</strong
-          ><span class="choose-button"
-            >Choose files <span aria-hidden="true">＋</span></span
-          >
-          <small id="fileHint"></small><input type="file" id="files" multiple />
-        </label>
-        <p id="selectionCount" class="selection-count">No files selected yet</p>
-        <ol id="fileList"></ol>
-        <p id="loginReminder" class="note">
-          Preview and arrange your files here. Sign in above when you’re ready
-          to process.
-        </p>
-        <div id="options"></div>
-        <div id="cropGuide" aria-label="Crop or privacy mask preview"></div>
-        <p class="note" id="toolNote"></p>
-        <button class="primary" id="run">Process files ↗</button
-        ><button id="cancel" hidden>Cancel</button>
-        <p id="processStatus" role="status"></p>
-        <div id="downloads"></div>
-      </section>
-      <section class="bottom-note">
-        <span>PRIVATE BY DESIGN</span>
-        <p>
-          Processing happens on this device. Your documents are never sent to
-          NDC’s server. Complex files may take longer or need more memory.
-        </p>
-      </section>
-    </main>
-    <footer>
-      <span>© Next Dimension Customs</span
-      ><a href="https://nextdimensioncustoms.in/"
-        >Built for your working day ↗</a
-      >
-    </footer>
-    <script src="vendor/pdf-lib.min.js"></script>
-    <script src="vendor/jszip.min.js"></script>
-    <script>
-      document.getElementById("drop").addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          document.getElementById("files").click();
-        }
-      });
-    </script>
+    <!-- App is rendered by Dashboard.js and ToolWorkspace.js -->
     <script type="importmap">
       {
         "imports": {
@@ -175,7 +25,6 @@
         }
       }
     </script>
-
     <script type="module" src="./app.js"></script>
   </body>
 </html>

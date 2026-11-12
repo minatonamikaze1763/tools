@@ -3,8 +3,12 @@
  * Export PDF pages as PNG, JPEG, or WebP images
  */
 
-const pdfjsPromise = import('../../../vendor/pdf.mjs').then(m => {
-  m.GlobalWorkerOptions.workerSrc = new URL('../../../vendor/pdf.worker.mjs', import.meta.url).href;
+// Module-relative vendor paths for GitHub Pages subdirectory and Live Server compatibility
+const pdfjsUrl = new URL('../../vendor/pdf.mjs', import.meta.url);
+const pdfjsWorkerUrl = new URL('../../vendor/pdf.worker.mjs', import.meta.url);
+
+const pdfjsPromise = import(pdfjsUrl.href).then(m => {
+  m.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl.href;
   return m;
 });
 

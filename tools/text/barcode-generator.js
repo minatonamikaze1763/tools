@@ -9,7 +9,7 @@ async function loadBwipjs() {
   if (bwipjs) return bwipjs;
   // Load the minified bundle using relative path
   const script = document.createElement('script');
-  script.src = '../../../vendor/bwip-js.min.js';
+  script.src = '../../vendor/bwip-js.min.js';
   document.head.appendChild(script);
   await new Promise((resolve, reject) => {
     script.onload = resolve;
@@ -44,7 +44,7 @@ export default {
   description: 'Create 1D and 2D barcodes for products, inventory, logistics',
   icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 4h18M3 8h18M3 12h18M3 16h18M3 20h18"/></svg>`,
   category: 'text',
-  accept: '',
+  accept: '*',
   single: false,
   hints: '20+ barcode formats · customizable size, text, colors · PNG/SVG/PDF output',
   order: 15,

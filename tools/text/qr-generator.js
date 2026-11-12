@@ -304,7 +304,7 @@ export default {
   description: 'Create QR codes for URLs, WiFi, contacts, and more',
   icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4z"/></svg>`,
   category: 'text',
-  accept: '',
+  accept: '*',
   single: false,
   hints: 'Generate QR codes · multiple formats · customizable colors and size',
   order: 14,

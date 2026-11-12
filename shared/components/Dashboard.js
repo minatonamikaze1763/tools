@@ -1,5 +1,6 @@
 /**
  * Dashboard Component — Main tool discovery and navigation
+ * Premium redesign with polished UI
  */
 
 import { toolRegistry } from '../core/ToolRegistry.js';
@@ -18,6 +19,8 @@ export class Dashboard {
     this.currentFilter = 'all';
     this.searchQuery = '';
     this.toolsGrid = null;
+    this.shortcutsModal = null;
+    this.lastFocusedElement = null;
   }
 
   render() {
@@ -121,18 +124,18 @@ export class Dashboard {
         </div>
         <p id="filterStatus" class="filter-status" role="status" aria-live="polite">20 tools available</p>
 
-        <section class="tools" id="toolsGrid" aria-label="Available tools"></section>
+        <section class="tools tools-grid" id="toolsGrid" aria-label="Available tools"></section>
 
         <!-- Favorites Section (dynamic) -->
         <section id="favoritesSection" class="tools-section" hidden aria-label="Favorite tools">
           <h3 class="heading-3" style="margin-bottom: var(--space-4);">Favorites</h3>
-          <div class="tools" id="favoritesGrid"></div>
+          <div class="tools tools-grid" id="favoritesGrid"></div>
         </section>
 
         <!-- Recent Section (dynamic) -->
         <section id="recentSection" class="tools-section" hidden aria-label="Recently used tools">
           <h3 class="heading-3" style="margin-bottom: var(--space-4);">Recently Used</h3>
-          <div class="tools" id="recentGrid"></div>
+          <div class="tools tools-grid" id="recentGrid"></div>
         </section>
       </main>
 
@@ -146,7 +149,7 @@ export class Dashboard {
         <div class="modal">
           <div class="modal-header">
             <h3 id="shortcutsTitle" class="modal-title">Keyboard Shortcuts</h3>
-            <button class="modal-close" aria-label="Close shortcuts">&times;</button>
+            <button type="button" class="modal-close" aria-label="Close shortcuts">&times;</button>
           </div>
           <div class="modal-body">
             <div class="shortcuts-modal">
@@ -189,12 +192,9 @@ export class Dashboard {
     this.recentSection = this.container.querySelector('#recentSection');
     this.recentGrid = this.container.querySelector('#recentGrid');
 
-    // Shortcuts modal
+    // Shortcuts modal - initialize static modal
     this.shortcutsModal = this.container.querySelector('#shortcutsModal');
-    this.shortcutsModal.querySelector('.modal-close').addEventListener('click', () => this.closeShortcutsModal());
-    this.shortcutsModal.addEventListener('click', (e) => {
-      if (e.target === this.shortcutsModal) this.closeShortcutsModal();
-    });
+    Modal.initStatic('shortcutsModal', { title: 'Keyboard Shortcuts' });
   }
 
   bindEvents() {
@@ -362,7 +362,7 @@ export class Dashboard {
         }
       });
 
-      // Favorite on long press or context menu (simplified: double-click for favorite)
+      // Favorite on double-click
       let lastClick = 0;
       card.addEventListener('click', (e) => {
         const now = Date.now();
@@ -411,14 +411,17 @@ export class Dashboard {
   }
 
   openShortcutsModal() {
-    this.shortcutsModal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    this.shortcutsModal.querySelector('.modal-close').focus();
+    this.lastFocusedElement = document.activeElement;
+    Modal.openStatic('shortcutsModal');
   }
 
   closeShortcutsModal() {
-    this.shortcutsModal.hidden = true;
-    document.body.style.overflow = '';
+    Modal.close('shortcutsModal');
+    // Restore focus to the element that opened the modal
+    if (this.lastFocusedElement) {
+      this.lastFocusedElement.focus();
+      this.lastFocusedElement = null;
+    }
   }
 
   destroy() {

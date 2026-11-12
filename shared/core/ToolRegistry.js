@@ -34,7 +34,8 @@ export class ToolRegistry {
     // Validate required fields
     const required = ['id', 'title', 'description', 'icon', 'category', 'accept', 'single'];
     for (const field of required) {
-      if (!tool[field]) {
+      // Use hasOwnProperty to properly handle boolean false values
+      if (!Object.hasOwn(tool, field) || tool[field] === undefined || tool[field] === null || tool[field] === '') {
         console.warn(`[ToolRegistry] Tool ${tool.id} missing required field: ${field}`);
         return false;
       }

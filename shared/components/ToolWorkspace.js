@@ -1,5 +1,6 @@
 /**
  * Tool Workspace Component — Individual tool interface
+ * Premium redesign with 4-step workflow: Input → Configure → Process → Results
  */
 
 import { FileUpload } from './FileUpload.js';
@@ -17,6 +18,7 @@ export class ToolWorkspace {
     this.fileUpload = null;
     this.results = [];
     this.isProcessing = false;
+    this.currentStep = 1;
   }
 
   render() {
@@ -59,86 +61,129 @@ export class ToolWorkspace {
         </div>
       </div>
 
+      <!-- Workflow Steps Indicator -->
       <div class="tool-steps" role="status" aria-label="Process steps">
-        <div class="tool-step active" data-step="1">
+        <div class="tool-step" data-step="1">
           <span class="tool-step-number">1</span>
-          <span>Add files</span>
+          <span>Input</span>
         </div>
         <div class="tool-step" data-step="2">
           <span class="tool-step-number">2</span>
-          <span>Adjust settings</span>
+          <span>Configure</span>
         </div>
         <div class="tool-step" data-step="3">
           <span class="tool-step-number">3</span>
-          <span>Download</span>
+          <span>Process</span>
+        </div>
+        <div class="tool-step" data-step="4">
+          <span class="tool-step-number">4</span>
+          <span>Results</span>
         </div>
       </div>
 
-      <!-- File Drop Zone -->
-      <label class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose files to process">
-        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg>
-        <strong class="drop-zone-text">Drop your files here</strong>
-        <span class="drop-zone-hint"><span class="choose-button">Choose files <span aria-hidden="true">+</span></span></span>
-        <small id="fileHint" class="drop-zone-hint"></small>
-        <input type="file" id="fileInput" class="drop-zone-input" multiple />
-      </label>
+      <!-- Step 1: Input -->
+      <div class="tool-panel" id="panelInput" role="region" aria-label="Step 1: Add files">
+        <!-- File Drop Zone -->
+        <label class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose files to process">
+          <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg>
+          <strong class="drop-zone-text">Drop your files here</strong>
+          <span class="drop-zone-hint"><span class="choose-button">Choose files <span aria-hidden="true">+</span></span></span>
+          <small id="fileHint" class="drop-zone-hint"></small>
+          <input type="file" id="fileInput" class="drop-zone-input" multiple />
+        </label>
 
-      <p id="selectionCount" class="text-sm text-muted" role="status" aria-live="polite">No files selected yet</p>
+        <p id="selectionCount" class="text-sm text-muted" role="status" aria-live="polite">No files selected yet</p>
 
-      <!-- File List -->
-      <ul id="fileList" class="file-list" role="list" aria-label="Selected files"></ul>
+        <!-- File List -->
+        <ul id="fileList" class="file-list" role="list" aria-label="Selected files"></ul>
 
-      <!-- Login Reminder -->
-      <p id="loginReminder" class="text-sm text-muted" style="margin-top: var(--space-4); padding: var(--space-3); background: var(--color-bg-secondary); border-radius: var(--radius-md);" hidden>
-        Preview and arrange your files here. Sign in above when you're ready to process.
-      </p>
+        <!-- Login Reminder -->
+        <p id="loginReminder" class="text-sm text-muted" style="margin-top: var(--space-4); padding: var(--space-3); background: var(--color-bg-secondary); border-radius: var(--radius-md);" hidden>
+          Preview and arrange your files here. Sign in above when you're ready to process.
+        </p>
 
-      <!-- Options Panel -->
-      <div id="options" class="options-grid" aria-label="Tool options"></div>
-
-      <!-- Crop/Redact Guide -->
-      <div id="cropGuide" class="drop-zone" style="margin-top: var(--space-4);" hidden aria-label="Crop or privacy mask preview"></div>
-
-      <!-- Tool Note -->
-      <p id="toolNote" class="text-sm" style="margin-top: var(--space-4); padding: var(--space-3); background: var(--color-bg-secondary); border-radius: var(--radius-md); border-left: 3px solid var(--color-gold-primary);"></p>
-
-      <!-- Progress -->
-      <div id="progressContainer" class="progress-container" hidden role="status" aria-live="polite">
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-          <div id="progressFill" class="progress-fill"></div>
-        </div>
-        <div class="progress-text">
-          <span id="progressText">Processing…</span>
-          <span id="progressPercent">0%</span>
+        <!-- Continue Button -->
+        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+          <button class="btn btn-primary btn-lg" id="continueToConfig" style="flex: 1; min-width: 200px;" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span>Continue to settings</span>
+          </button>
+          <button class="btn btn-ghost" id="resetBtnInput" style="margin-left: auto;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 3"/><path d="M3 3v5h5"/></svg>
+            Clear all
+          </button>
         </div>
       </div>
 
-      <!-- Process Button -->
-      <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6); flex-wrap: wrap;">
-        <button class="btn btn-primary btn-lg" id="runBtn" style="flex: 1; min-width: 200px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <span id="runBtnText">Process files</span>
-        </button>
-        <button class="btn btn-secondary" id="cancelBtn" hidden>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          Cancel
-        </button>
-        <button class="btn btn-ghost" id="resetBtn" style="margin-left: auto;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          Reset
-        </button>
+      <!-- Step 2: Configure -->
+      <div class="tool-panel" id="panelConfigure" role="region" aria-label="Step 2: Adjust settings" hidden>
+        <div id="options" class="options-grid" aria-label="Tool options"></div>
+
+        <!-- Crop/Redact Guide -->
+        <div id="cropGuide" class="drop-zone" style="margin-top: var(--space-4);" hidden aria-label="Crop or privacy mask preview"></div>
+
+        <!-- Tool Note -->
+        <p id="toolNote" class="text-sm" style="margin-top: var(--space-4); padding: var(--space-3); background: var(--color-bg-secondary); border-radius: var(--radius-md); border-left: 3px solid var(--color-gold-primary);"></p>
+
+        <!-- Navigation -->
+        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+          <button class="btn btn-secondary" id="backToInput">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary btn-lg" id="continueToProcess" style="flex: 1; min-width: 200px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Process files</span>
+          </button>
+        </div>
       </div>
 
-      <p id="processStatus" class="text-sm" role="status" aria-live="polite" style="margin-top: var(--space-4); min-height: 24px;"></p>
-
-      <!-- Results Panel -->
-      <div id="downloads" class="result-panel" hidden aria-label="Processing results">
-        <div class="result-header">
-          <h3 class="result-title">Results</h3>
-          <div id="resultStats" class="result-stats"></div>
+      <!-- Step 3: Process -->
+      <div class="tool-panel" id="panelProcess" role="region" aria-label="Step 3: Processing" hidden>
+        <!-- Progress -->
+        <div id="progressContainer" class="progress-container" role="status" aria-live="polite">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+          <div class="progress-text">
+            <span id="progressText">Processing…</span>
+            <span id="progressPercent">0%</span>
+          </div>
         </div>
-        <div id="resultPreview" class="result-preview"></div>
-        <div id="resultActions" class="result-actions"></div>
+
+        <p id="processStatus" class="text-sm" role="status" aria-live="polite" style="margin-top: var(--space-4); min-height: 24px;"></p>
+
+        <!-- Cancel Button -->
+        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6); justify-content: center;">
+          <button class="btn btn-secondary btn-lg" id="cancelBtn" style="min-width: 200px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cancel processing
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Results -->
+      <div class="tool-panel" id="panelResults" role="region" aria-label="Step 4: Download results" hidden>
+        <div id="downloads" class="result-panel" aria-label="Processing results">
+          <div class="result-header">
+            <h3 class="result-title">Results</h3>
+            <div id="resultStats" class="result-stats"></div>
+          </div>
+          <div id="resultPreview" class="result-preview"></div>
+          <div id="resultActions" class="result-actions"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6); justify-content: center;">
+          <button class="btn btn-secondary" id="backToConfigure">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Adjust settings
+          </button>
+          <button class="btn btn-primary btn-lg" id="processAgain" style="min-width: 200px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 3"/><path d="M3 3v5h5"/></svg>
+            Process more
+          </button>
+        </div>
       </div>
 
       <!-- Help Panel (dynamic) -->
@@ -159,16 +204,11 @@ export class ToolWorkspace {
     this.options = this.container.querySelector('#options');
     this.cropGuide = this.container.querySelector('#cropGuide');
     this.toolNote = this.container.querySelector('#toolNote');
-    this.runBtn = this.container.querySelector('#runBtn');
-    this.runBtnText = this.container.querySelector('#runBtnText');
-    this.cancelBtn = this.container.querySelector('#cancelBtn');
-    this.resetBtn = this.container.querySelector('#resetBtn');
-    this.processStatus = this.container.querySelector('#processStatus');
     this.progressContainer = this.container.querySelector('#progressContainer');
     this.progressFill = this.container.querySelector('#progressFill');
     this.progressText = this.container.querySelector('#progressText');
     this.progressPercent = this.container.querySelector('#progressPercent');
-    this.downloads = this.container.querySelector('#downloads');
+    this.processStatus = this.container.querySelector('#processStatus');
     this.resultPreview = this.container.querySelector('#resultPreview');
     this.resultActions = this.container.querySelector('#resultActions');
     this.resultStats = this.container.querySelector('#resultStats');
@@ -179,20 +219,46 @@ export class ToolWorkspace {
     this.closeEditor = this.container.querySelector('#closeEditor');
     this.helpBtn = this.container.querySelector('#helpBtn');
 
-    // Tool header elements
+    // Panels
+    this.panelInput = this.container.querySelector('#panelInput');
+    this.panelConfigure = this.container.querySelector('#panelConfigure');
+    this.panelProcess = this.container.querySelector('#panelProcess');
+    this.panelResults = this.container.querySelector('#panelResults');
+
+    // Buttons
+    this.continueToConfig = this.container.querySelector('#continueToConfig');
+    this.resetBtnInput = this.container.querySelector('#resetBtnInput');
+    this.backToInput = this.container.querySelector('#backToInput');
+    this.continueToProcess = this.container.querySelector('#continueToProcess');
+    this.cancelBtn = this.container.querySelector('#cancelBtn');
+    this.backToConfigure = this.container.querySelector('#backToConfigure');
+    this.processAgain = this.container.querySelector('#processAgain');
+
+    // Tool steps
     this.toolSteps = this.container.querySelectorAll('.tool-step');
   }
 
   bindEvents() {
-    this.runBtn.addEventListener('click', () => this.handleProcess());
-    this.cancelBtn.addEventListener('click', () => this.handleCancel());
-    this.resetBtn.addEventListener('click', () => this.handleReset());
     this.closeEditor.addEventListener('click', () => this.closeTool());
     this.helpBtn.addEventListener('click', () => this.toggleHelp());
 
+    // Panel navigation
+    this.continueToConfig.addEventListener('click', () => this.goToStep(2));
+    this.backToInput.addEventListener('click', () => this.goToStep(1));
+    this.continueToProcess.addEventListener('click', () => this.goToStep(3));
+    this.backToConfigure.addEventListener('click', () => this.goToStep(2));
+    this.processAgain.addEventListener('click', () => this.goToStep(1));
+
+    // Actions
+    this.resetBtnInput.addEventListener('click', () => this.handleReset());
+    this.cancelBtn.addEventListener('click', () => this.handleCancel());
+
     // Keyboard shortcuts
     KeyboardShortcuts.register('ctrl+enter', () => {
-      if (!this.container.hidden && !this.isProcessing) this.handleProcess();
+      if (!this.container.hidden) {
+        if (this.currentStep === 1 && !this.continueToConfig.disabled) this.goToStep(2);
+        else if (this.currentStep === 2) this.goToStep(3);
+      }
     });
     KeyboardShortcuts.register('ctrl+s', () => {
       if (!this.container.hidden && this.results.length) this.triggerDownload();
@@ -211,6 +277,7 @@ export class ToolWorkspace {
     this.files = [];
     this.results = [];
     this.isProcessing = false;
+    this.currentStep = 1;
 
     // Update UI
     this.toolTitle.textContent = tool.title;
@@ -218,8 +285,6 @@ export class ToolWorkspace {
     this.fileHint.textContent = tool.hints || '';
     this.fileInput.accept = tool.accept || '';
     this.fileInput.multiple = !tool.single;
-    this.processStatus.textContent = '';
-    this.runBtnText.textContent = `Create ${tool.title.toLowerCase()} result`;
 
     // Show/hide login reminder
     this.loginReminder.hidden = !!this.state.token;
@@ -240,8 +305,8 @@ export class ToolWorkspace {
     });
     this.fileUpload.clear();
 
-    // Reset steps
-    this.updateStep(1);
+    // Reset to step 1
+    this.goToStep(1);
 
     // Show workspace
     this.container.hidden = false;
@@ -272,20 +337,58 @@ export class ToolWorkspace {
     this.state.activeTool = null;
     this.container.hidden = true;
     this.container.classList.remove('active');
-    this.downloads.hidden = true;
-    this.progressContainer.hidden = true;
-    this.cancelBtn.hidden = true;
-    this.runBtn.disabled = false;
-    this.fileInput.disabled = false;
+    this.goToStep(1);
 
     // Call callback
     this.callbacks.onClose?.();
+  }
+
+  goToStep(step) {
+    // Validate step transitions
+    if (step === 2 && this.files.length === 0) {
+      Toast.error('Add at least one file first');
+      return;
+    }
+    if (step === 3 && this.files.length === 0) {
+      Toast.error('Add files before processing');
+      return;
+    }
+    if (step === 3 && !this.validateOptions()) return;
+
+    this.currentStep = step;
+
+    // Hide all panels
+    this.panelInput.hidden = true;
+    this.panelConfigure.hidden = true;
+    this.panelProcess.hidden = true;
+    this.panelResults.hidden = true;
+
+    // Show current panel
+    switch (step) {
+      case 1: this.panelInput.hidden = false; break;
+      case 2: this.panelConfigure.hidden = false; break;
+      case 3: this.panelProcess.hidden = false; this.startProcessing(); break;
+      case 4: this.panelResults.hidden = false; break;
+    }
+
+    // Update step indicators
+    this.toolSteps.forEach((el, i) => {
+      const s = i + 1;
+      el.classList.toggle('active', s === step);
+      el.classList.toggle('completed', s < step);
+    });
+
+    // Focus first focusable element in new panel
+    const panel = this.container.querySelector(`#panel${['Input', 'Configure', 'Process', 'Results'][step - 1]}`);
+    const focusable = panel?.querySelector('button, input, select, textarea, [tabindex="0"]');
+    if (focusable) focusable.focus();
   }
 
   buildOptionsPanel(tool) {
     this.options.innerHTML = '';
 
     if (!tool.optionsSchema || Object.keys(tool.optionsSchema).length === 0) {
+      this.options.innerHTML = '<p class="text-muted text-sm">No settings for this tool.</p>';
       return;
     }
 
@@ -461,10 +564,8 @@ export class ToolWorkspace {
     this.renderFileList();
     this.updateSelectionCount();
 
-    // Update step indicator
-    if (files.length > 0) {
-      this.updateStep(2);
-    }
+    // Enable continue button
+    this.continueToConfig.disabled = files.length === 0;
   }
 
   renderFileList() {
@@ -541,7 +642,6 @@ export class ToolWorkspace {
       img.onload = () => URL.revokeObjectURL(url);
       container.appendChild(img);
     } else if (file.type === 'application/pdf') {
-      // PDF thumbnail would require pdfjs - show icon for now
       container.innerHTML = '<svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>';
     } else {
       container.innerHTML = '<svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>';
@@ -573,8 +673,9 @@ export class ToolWorkspace {
     this.fileUpload.removeFile(index);
     this.renderFileList();
     this.updateSelectionCount();
+    this.continueToConfig.disabled = this.files.length === 0;
     if (this.files.length === 0) {
-      this.updateStep(1);
+      this.goToStep(1);
     }
   }
 
@@ -603,35 +704,39 @@ export class ToolWorkspace {
     return true;
   }
 
-  async handleProcess() {
+  async startProcessing() {
     if (this.isProcessing) return;
     if (!this.files.length) {
       this.processStatus.textContent = 'Choose files first.';
+      this.goToStep(1);
       return;
     }
-    if (!this.validateOptions()) return;
+    if (!this.validateOptions()) {
+      this.goToStep(2);
+      return;
+    }
     if (!this.state.token) {
       this.processStatus.textContent = 'Please sign in to process files.';
-      this.container.querySelector('#accessSection').scrollIntoView({ behavior: 'smooth' });
+      this.goToStep(1);
       return;
     }
 
     this.isProcessing = true;
-    this.runBtn.disabled = true;
-    this.fileInput.disabled = true;
-    this.cancelBtn.hidden = false;
+    this.cancelBtn.disabled = false;
     this.progressContainer.hidden = false;
-    this.downloads.hidden = true;
-    this.updateStep(3);
+    this.updateProgress(0, 'Starting…');
 
     try {
       // Verify session
       await this.callbacks.onVerifySession?.();
 
       const options = this.getOptions();
-      this.results = await this.callbacks.onProcess(this.activeTool, this.files, options);
+      this.results = await this.callbacks.onProcess(this.activeTool, this.files, options, (percent, text) => {
+        this.updateProgress(percent, text);
+      });
 
       this.showResults();
+      this.goToStep(4);
       Toast.success(`Done. ${this.results.length} file${this.results.length !== 1 ? 's' : ''} ready.`);
     } catch (error) {
       this.processStatus.textContent = error.message || 'Unable to process files. Try a smaller or unencrypted file.';
@@ -641,13 +746,13 @@ export class ToolWorkspace {
         this.state.user = null;
         sessionStorage.removeItem('ndc_tools_token');
         this.loginReminder.hidden = false;
+        this.goToStep(1);
+      } else {
+        this.goToStep(2);
       }
     } finally {
       this.isProcessing = false;
-      this.runBtn.disabled = false;
-      this.fileInput.disabled = false;
-      this.cancelBtn.hidden = true;
-      this.progressContainer.hidden = true;
+      this.cancelBtn.disabled = true;
     }
   }
 
@@ -655,6 +760,8 @@ export class ToolWorkspace {
     this.isProcessing = false;
     this.processStatus.textContent = 'Cancelling…';
     Toast.info('Processing cancelled');
+    // Allow going back to configure
+    this.goToStep(2);
   }
 
   handleReset() {
@@ -664,13 +771,11 @@ export class ToolWorkspace {
     this.fileUpload.clear();
     this.renderFileList();
     this.updateSelectionCount();
-    this.downloads.hidden = true;
-    this.processStatus.textContent = '';
-    this.updateStep(1);
+    this.continueToConfig.disabled = true;
+    this.goToStep(1);
   }
 
   showResults() {
-    this.downloads.hidden = false;
     this.resultPreview.innerHTML = '';
     this.resultActions.innerHTML = '';
 
@@ -775,7 +880,10 @@ export class ToolWorkspace {
   }
 
   triggerProcess() {
-    if (!this.isProcessing) this.handleProcess();
+    if (!this.isProcessing) {
+      if (this.currentStep === 1) this.goToStep(2);
+      else if (this.currentStep === 2) this.goToStep(3);
+    }
   }
 
   triggerDownload() {
@@ -786,14 +894,6 @@ export class ToolWorkspace {
   triggerCopy() {
     // Copy first result as text/blob - simplified
     Toast.info('Copy not implemented for this result type');
-  }
-
-  updateStep(step) {
-    this.toolSteps.forEach((el, i) => {
-      const s = i + 1;
-      el.classList.toggle('active', s === step);
-      el.classList.toggle('completed', s < step);
-    });
   }
 
   updateProgress(percent, text) {

@@ -49,15 +49,16 @@ async function init() {
   // Initialize UI components
   const dashboard = new Dashboard(state, { onToolSelect: openTool, onLogin: handleLogin, onLogout: handleLogout });
   const workspace = new ToolWorkspace(state, { onClose: closeTool, onProcess: processTool });
+  setWorkspaceInstance(workspace);
+
+  // Register all tools FIRST (so dashboard can render them)
+  await registerTools();
 
   // Render dashboard
   dashboard.render();
 
   // Set up global event listeners
   setupGlobalListeners(dashboard, workspace);
-
-  // Register all tools
-  await registerTools();
 
   console.log('[NDC Tools] Application initialized');
 }
@@ -66,35 +67,56 @@ async function init() {
 async function registerTools() {
   const registry = ToolRegistry.getInstance();
 
-  // PDF Tools
-  registry.register(await import('./tools/pdf/pdf-compressor.js'));
-  registry.register(await import('./tools/pdf/pdf-merger.js'));
-  registry.register(await import('./tools/pdf/pdf-splitter.js'));
-  registry.register(await import('./tools/pdf/pdf-to-image.js'));
-  registry.register(await import('./tools/pdf/images-to-pdf.js'));
+  const toolImports = [
+    // PDF Tools
+    { category: 'pdf', id: 'pdf-compressor', path: './tools/pdf/pdf-compressor.js' },
+    { category: 'pdf', id: 'pdf-merger', path: './tools/pdf/pdf-merger.js' },
+    { category: 'pdf', id: 'pdf-splitter', path: './tools/pdf/pdf-splitter.js' },
+    { category: 'pdf', id: 'pdf-to-image', path: './tools/pdf/pdf-to-image.js' },
+    { category: 'pdf', id: 'images-to-pdf', path: './tools/pdf/images-to-pdf.js' },
 
-  // Image Tools
-  registry.register(await import('./tools/image/image-compressor.js'));
-  registry.register(await import('./tools/image/image-resizer.js'));
-  registry.register(await import('./tools/image/image-converter.js'));
-  registry.register(await import('./tools/image/image-watermark.js'));
-  registry.register(await import('./tools/image/image-cleanup.js'));
+    // Image Tools
+    { category: 'image', id: 'image-compressor', path: './tools/image/image-compressor.js' },
+    { category: 'image', id: 'image-resizer', path: './tools/image/image-resizer.js' },
+    { category: 'image', id: 'image-converter', path: './tools/image/image-converter.js' },
+    { category: 'image', id: 'image-watermark', path: './tools/image/image-watermark.js' },
+    { category: 'image', id: 'image-cleanup', path: './tools/image/image-cleanup.js' },
 
-  // Text/Data Tools
-  registry.register(await import('./tools/text/text-toolkit.js'));
-  registry.register(await import('./tools/text/json-toolkit.js'));
-  registry.register(await import('./tools/text/csv-excel-toolkit.js'));
-  registry.register(await import('./tools/text/qr-generator.js'));
-  registry.register(await import('./tools/text/barcode-generator.js'));
+    // Text/Data Tools
+    { category: 'text', id: 'text-toolkit', path: './tools/text/text-toolkit.js' },
+    { category: 'text', id: 'json-toolkit', path: './tools/text/json-toolkit.js' },
+    { category: 'text', id: 'csv-excel-toolkit', path: './tools/text/csv-excel-toolkit.js' },
+    { category: 'text', id: 'qr-generator', path: './tools/text/qr-generator.js' },
+    { category: 'text', id: 'barcode-generator', path: './tools/text/barcode-generator.js' },
 
-  // Developer/Productivity Tools
-  registry.register(await import('./tools/dev/encoder-decoder.js'));
-  registry.register(await import('./tools/dev/hash-generator.js'));
-  registry.register(await import('./tools/dev/date-calculator.js'));
-  registry.register(await import('./tools/dev/calculator-converter.js'));
-  registry.register(await import('./tools/dev/file-organizer.js'));
+    // Developer/Productivity Tools
+    { category: 'dev', id: 'encoder-decoder', path: './tools/dev/encoder-decoder.js' },
+    { category: 'dev', id: 'hash-generator', path: './tools/dev/hash-generator.js' },
+    { category: 'dev', id: 'date-calculator', path: './tools/dev/date-calculator.js' },
+    { category: 'dev', id: 'calculator-converter', path: './tools/dev/calculator-converter.js' },
+    { category: 'dev', id: 'file-organizer', path: './tools/dev/file-organizer.js' }
+  ];
 
-  console.log(`[NDC Tools] Registered ${registry.getAll().length} tools`);
+  const failedTools = [];
+
+  for (const toolDef of toolImports) {
+    try {
+      const module = await import(toolDef.path);
+      const success = registry.register(module);
+      if (!success) {
+        failedTools.push(toolDef.id);
+      }
+    } catch (error) {
+      console.error(`[NDC Tools] Failed to load ${toolDef.id}:`, error.message);
+      failedTools.push(toolDef.id);
+    }
+  }
+
+  const successCount = registry.getAll().length;
+  console.log(`[NDC Tools] Registration summary: ${successCount}/20 successful`);
+  if (failedTools.length > 0) {
+    console.warn(`[NDC Tools] Failed tools: ${failedTools.join(', ')}`);
+  }
 }
 
 // Session verification
@@ -128,19 +150,23 @@ async function handleLogout() {
 }
 
 // Tool management
+let workspaceInstance = null;
+
+function setWorkspaceInstance(instance) {
+  workspaceInstance = instance;
+}
+
 function openTool(toolDef) {
-  const workspace = document.querySelector('tool-workspace');
-  if (workspace) {
-    workspace.openTool(toolDef);
+  if (workspaceInstance) {
+    workspaceInstance.openTool(toolDef);
   }
   // Track recent
   addToRecent(toolDef.id);
 }
 
 function closeTool() {
-  const workspace = document.querySelector('tool-workspace');
-  if (workspace) {
-    workspace.closeTool();
+  if (workspaceInstance) {
+    workspaceInstance.closeTool();
   }
   state.activeTool = null;
 }
@@ -199,7 +225,7 @@ function setupGlobalListeners(dashboard, workspace) {
     if (state.activeTool) closeTool();
     Modal.closeAll();
   });
-  KeyboardShortcuts.register('?', () => Modal.open('keyboard-shortcuts'));
+  KeyboardShortcuts.register('?', () => dashboard.openShortcutsModal());
 
   // Handle before unload
   window.addEventListener('beforeunload', () => {
