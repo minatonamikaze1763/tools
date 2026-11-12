@@ -1,6 +1,7 @@
 /**
  * NDC Tools — Main Application Entry Point
  * Modular architecture with lazy-loaded tool modules
+ * Browser-side processing for all 20 tools
  */
 
 import { ToolRegistry } from './shared/core/ToolRegistry.js';
@@ -61,44 +62,44 @@ async function init() {
   console.log('[NDC Tools] Application initialized');
 }
 
-// Register all 20 tools
+// Register all 20 tools using relative imports (works on GitHub Pages and Live Server)
 async function registerTools() {
   const registry = ToolRegistry.getInstance();
 
   // PDF Tools
-  registry.register(await import('./tools/tools/pdf/pdf-compressor.js'));
-  registry.register(await import('./tools/tools/pdf/pdf-merger.js'));
-  registry.register(await import('./tools/tools/pdf/pdf-splitter.js'));
-  registry.register(await import('./tools/tools/pdf/pdf-to-image.js'));
-  registry.register(await import('./tools/tools/pdf/images-to-pdf.js'));
+  registry.register(await import('./tools/pdf/pdf-compressor.js'));
+  registry.register(await import('./tools/pdf/pdf-merger.js'));
+  registry.register(await import('./tools/pdf/pdf-splitter.js'));
+  registry.register(await import('./tools/pdf/pdf-to-image.js'));
+  registry.register(await import('./tools/pdf/images-to-pdf.js'));
 
   // Image Tools
-  registry.register(await import('./tools/tools/image/image-compressor.js'));
-  registry.register(await import('./tools/tools/image/image-resizer.js'));
-  registry.register(await import('./tools/tools/image/image-converter.js'));
-  registry.register(await import('./tools/tools/image/image-watermark.js'));
-  registry.register(await import('./tools/tools/image/image-cleanup.js'));
+  registry.register(await import('./tools/image/image-compressor.js'));
+  registry.register(await import('./tools/image/image-resizer.js'));
+  registry.register(await import('./tools/image/image-converter.js'));
+  registry.register(await import('./tools/image/image-watermark.js'));
+  registry.register(await import('./tools/image/image-cleanup.js'));
 
   // Text/Data Tools
-  registry.register(await import('./tools/tools/text/text-toolkit.js'));
-  registry.register(await import('./tools/tools/text/json-toolkit.js'));
-  registry.register(await import('./tools/tools/text/csv-excel-toolkit.js'));
-  registry.register(await import('./tools/tools/text/qr-generator.js'));
-  registry.register(await import('./tools/tools/text/barcode-generator.js'));
+  registry.register(await import('./tools/text/text-toolkit.js'));
+  registry.register(await import('./tools/text/json-toolkit.js'));
+  registry.register(await import('./tools/text/csv-excel-toolkit.js'));
+  registry.register(await import('./tools/text/qr-generator.js'));
+  registry.register(await import('./tools/text/barcode-generator.js'));
 
   // Developer/Productivity Tools
-  registry.register(await import('./tools/tools/dev/encoder-decoder.js'));
-  registry.register(await import('./tools/tools/dev/hash-generator.js'));
-  registry.register(await import('./tools/tools/dev/date-calculator.js'));
-  registry.register(await import('./tools/tools/dev/calculator-converter.js'));
-  registry.register(await import('./tools/tools/dev/file-organizer.js'));
+  registry.register(await import('./tools/dev/encoder-decoder.js'));
+  registry.register(await import('./tools/dev/hash-generator.js'));
+  registry.register(await import('./tools/dev/date-calculator.js'));
+  registry.register(await import('./tools/dev/calculator-converter.js'));
+  registry.register(await import('./tools/dev/file-organizer.js'));
 
   console.log(`[NDC Tools] Registered ${registry.getAll().length} tools`);
 }
 
 // Session verification
 async function verifySession() {
-  const data = await api.get('/api/tools/access');
+  const data = await api.auth.me();
   state.user = data;
   return data;
 }
@@ -110,7 +111,7 @@ function clearSession() {
 }
 
 async function handleLogin(username, password) {
-  const data = await api.post('/api/tools/auth/login', { username, password });
+  const data = await api.auth.login(username, password);
   state.token = data.token;
   state.user = data;
   sessionStorage.setItem('ndc_tools_token', data.token);
@@ -120,7 +121,7 @@ async function handleLogin(username, password) {
 async function handleLogout() {
   if (state.token) {
     try {
-      await api.post('/api/tools/auth/logout');
+      await api.auth.logout();
     } catch {}
   }
   clearSession();
@@ -149,26 +150,38 @@ function addToRecent(toolId) {
   Storage.set('recent', state.recentTools);
 }
 
+// Tool processing - all tools run in browser, results downloaded locally
 async function processTool(toolDef, files, options) {
   state.isProcessing = true;
   try {
-    // Ensure session is valid
+    // Ensure session is valid (subscription check)
     if (!state.token) {
       throw new Error('Please sign in to process files');
     }
     await verifySession();
 
-    // Dynamic import of tool engine
-    const engineModule = await import('/api/tools/engine.js');
-    const engine = engineModule.default || engineModule;
+    // Load the tool module and execute its process function directly in browser
+    const module = await import(`./tools/${toolDef.category}/${toolDef.id}.js`);
+    const tool = module.default || module;
 
-    const results = await engine.process(toolDef.id, files, {
-      ...options,
+    // Validate files if tool has validate method
+    if (tool.validate) {
+      const validation = tool.validate(files);
+      if (!validation.valid) throw new Error(validation.error);
+    }
+
+    // Call tool's process method with progress/cancellation callbacks
+    const results = await tool.process(files, options, {
       onProgress: (text) => Toast.progress(text),
       cancelled: () => state.isProcessing === false
     });
 
-    return results;
+    // Normalize results
+    return results.map(r => ({
+      name: r.name,
+      blob: r.blob,
+      mime: r.mime || r.blob?.type
+    }));
   } finally {
     state.isProcessing = false;
   }

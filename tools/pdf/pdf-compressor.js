@@ -5,8 +5,8 @@
 
 import { PDFDocument } from 'pdf-lib';
 
-const pdfjsPromise = import('../../vendor/pdf.mjs').then(m => {
-  m.GlobalWorkerOptions.workerSrc = new URL('../../vendor/pdf.worker.mjs', import.meta.url).href;
+const pdfjsPromise = import('../../../vendor/pdf.mjs').then(m => {
+  m.GlobalWorkerOptions.workerSrc = new URL('../../../vendor/pdf.worker.mjs', import.meta.url).href;
   return m;
 });
 

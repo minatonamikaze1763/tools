@@ -3,13 +3,13 @@
  * Generate 1D and 2D barcodes (Code128, EAN, UPC, etc.)
  */
 
-// Load bwip-js from vendor
+// Load bwip-js from vendor (relative path for GitHub Pages / Live Server compatibility)
 let bwipjs = null;
 async function loadBwipjs() {
   if (bwipjs) return bwipjs;
-  // Load the minified bundle
+  // Load the minified bundle using relative path
   const script = document.createElement('script');
-  script.src = '/tools/vendor/bwip-js.min.js';
+  script.src = '../../../vendor/bwip-js.min.js';
   document.head.appendChild(script);
   await new Promise((resolve, reject) => {
     script.onload = resolve;

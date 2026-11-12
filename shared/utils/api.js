@@ -1,8 +1,13 @@
 /**
  * API Utility — Wrapper for fetch with auth and error handling
+ * Configurable base URL for dev (Live Server) and production (GitHub Pages)
  */
 
-const API_BASE = 'https://server.nextdimensioncustoms.in';
+// Detect environment: true for local dev (Live Server on 5500), false for production
+const IS_DEV = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+const API_BASE_URL = IS_DEV
+  ? 'http://127.0.0.1:3000'
+  : 'https://server.nextdimensioncustoms.in';
 
 class ApiError extends Error {
   constructor(message, status, data) {
@@ -14,7 +19,7 @@ class ApiError extends Error {
 }
 
 async function request(path, options = {}) {
-  const url = `${API_BASE}${path}`;
+  const url = `${API_BASE_URL}${path}`;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -83,13 +88,23 @@ export const api = {
     verify: () => api.get('/api/tools/auth/me')
   },
 
-  // Engine
-  getEngine: () => fetch(`${API_BASE}/api/tools/engine.js`, {
-    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('ndc_tools_token')}` }
-  }).then(r => r.text()),
+  // Tool processing - dispatches to browser or server based on tool type
+  process: async (toolId, files, options = {}) => {
+    const response = await api.post('/api/tools/process', {
+      toolId,
+      files: Array.from(files).map(f => ({
+        name: f.name,
+        type: f.type,
+        size: f.size,
+        // File data will be sent as FormData in real implementation
+      })),
+      options
+    });
+    return response;
+  },
 
   // Health
   health: () => api.get('/api/health')
 };
 
-export { ApiError };
+export { ApiError, API_BASE_URL, IS_DEV };
