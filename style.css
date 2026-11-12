@@ -104,3 +104,21 @@ button:is(.remove-btn,.sort-btn,.img-sort-btn,#sortAZ):hover { background: var(-
   *, *::before, *::after { transition: none !important; animation: none !important; }
   button:active:enabled { transform: none; }
 }
+
+/* Company contact */
+.header-links { display: flex; align-items: center; gap: clamp(.65rem, 2vw, 1.5rem); }
+.header-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-size: .9rem; text-decoration: none; }
+.header-links a:hover, .contact-email:hover { color: var(--highlight); text-decoration: underline; }
+.contact { background: var(--secondary); border-top: 1px solid var(--accent-line); }
+.contact-inner { max-width: 1440px; margin-inline: auto; padding: clamp(1.75rem, 4vw, 3.75rem) var(--pad); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem 2rem; }
+.contact h2 { margin: 0; font: 650 clamp(1.35rem, 2.6vw, 2rem)/1.2 var(--heading); letter-spacing: -.035em; }
+.contact-email { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); font-size: .95rem; overflow-wrap: anywhere; }
+.contact-site { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; padding: .9rem 1.1rem; border: 1px solid var(--accent-line); border-radius: 10px; color: var(--ink); background: var(--card); text-decoration: none; transition: background var(--fast), border-color var(--fast); }
+.contact-site:hover { background: var(--accent-bg); border-color: var(--gold); }
+.contact-site small { display: block; color: var(--muted); font-size: .8rem; }
+.contact-site strong { font-weight: 600; }
+.contact-arrow { display: grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--accent-bg); color: var(--highlight); font-size: 1.25rem; }
+@media (max-width: 540px) {
+  .header-links .suite { display: none; }
+  .contact-site { width: 100%; }
+}
