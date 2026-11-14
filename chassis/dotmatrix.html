@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dot Matrix Generator | NDC Tools</title>
+    <link rel="stylesheet" href="root.css" />
+    <style>
+
+
+
+
+/* =========================
+   GLOBAL
+========================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  font-family: Arial, sans-serif;
+
+  background: var(--bg);
+  color: var(--text);
+
+  display: flex;
+  justify-content: center;
+
+  padding: 25px;
+}
+
+.app {
+  max-width: 1400px;
+}
+
+
+/* =========================
+   HEADINGS
+========================== */
+
+h1 {
+  margin: 0 0 8px;
+
+  font-size: 25px;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================
+   WARNING
+========================== */
+
+.warning {
+  background: var(--brand-soft);
+
+  border: 1px solid var(--brand-muted);
+
+  color: var(--text-primary);
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  margin-bottom: 18px;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   CONTROLS
+========================== */
+
+.controls {
+  background: var(--card);
+
+  border: 1px solid var(--line);
+
+  border-radius: 10px;
+
+  padding: 16px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 14px;
+
+  box-shadow:
+    0 3px 12px var(--shadow);
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   LABELS
+========================== */
+
+label {
+  display: block;
+
+  font-size: 13px;
+
+  color: var(--text-secondary);
+
+  margin-bottom: 6px;
+}
+
+
+/* =========================
+   INPUTS
+========================== */
+
+input[type="text"],
+input[type="number"],
+input[type="range"] {
+  width: 100%;
+}
+
+input[type="text"],
+input[type="number"] {
+  background: var(--input-bg);
+
+  color: var(--text-primary);
+
+  border: 1px solid var(--line-light);
+
+  padding: 10px;
+
+  border-radius: 6px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--brand);
+
+  background: var(--hover-bg);
+
+  box-shadow:
+    0 0 0 2px var(--brand-shadow);
+}
+
+input[type="range"] {
+  accent-color: var(--brand);
+}
+
+
+/* =========================
+   RANGE
+========================== */
+
+.range-row {
+  display: flex;
+
+  gap: 10px;
+
+  align-items: center;
+}
+
+.range-row input {
+  flex: 1;
+}
+
+.value {
+  width: 50px;
+
+  text-align: right;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   BUTTONS
+========================== */
+
+button {
+  border: 1px solid var(--brand);
+
+  border-radius: 7px;
+
+  padding: 11px 17px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  background: var(--brand);
+
+  color: var(--bg);
+
+  margin-right: 8px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+  background: var(--brand-bright);
+
+  border-color: var(--brand-bright);
+
+  box-shadow:
+    0 3px 10px var(--brand-shadow);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================
+   PREVIEW
+========================== */
+
+.preview {
+  margin-top: 20px;
+
+  background: var(--card);
+
+  border: 1px solid var(--line);
+
+  border-radius: 10px;
+
+  padding: 20px;
+
+  text-align: center;
+
+  overflow: auto;
+
+  box-shadow:
+    0 3px 12px var(--shadow);
+}
+
+
+/* =========================
+   CANVAS
+========================== */
+
+canvas {
+  max-width: 100%;
+  height: auto;
+
+  background: #000000;
+
+  box-shadow:
+    0 8px 35px var(--shadow-heavy);
+}
+
+
+/* =========================
+   BUTTON GROUP
+========================== */
+
+.buttons {
+  margin-top: 14px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================== */
+
+.tool-nav {
+  width: max-content;
+  max-width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px;
+
+  margin-bottom: 20px;
+
+  background: var(--card);
+
+  border: 1px solid var(--line);
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 6px var(--shadow);
+
+  box-sizing: border-box;
+}
+
+.tool-nav a {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+
+  padding: 0 18px;
+
+  color: var(--text-secondary);
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 7px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+
+/* Navigation Hover */
+
+.tool-nav a:hover {
+  color: var(--text-primary);
+
+  background: var(--hover-bg);
+
+  border-color: var(--line-light);
+
+  box-shadow:
+    0 2px 5px var(--shadow);
+}
+
+
+/* Navigation Click */
+
+.tool-nav a:active {
+  transform: translateY(1px);
+}
+
+
+/* Active Tab */
+
+.tool-nav a.active {
+  color: var(--bg);
+
+  background: var(--brand);
+
+  border-color: var(--brand);
+
+  box-shadow:
+    0 2px 6px var(--brand-shadow);
+}
+
+
+/* Active Hover */
+
+.tool-nav a.active:hover {
+  color: var(--bg);
+
+  background: var(--brand-bright);
+
+  border-color: var(--brand-bright);
+
+  box-shadow:
+    0 3px 8px var(--brand-shadow);
+}
+
+
+/* Remove old <br> spacing */
+
+.tool-nav br {
+  display: none;
+}
+
+
+/* =========================
+   MOBILE NAVIGATION
+========================== */
+
+@media (max-width: 600px) {
+
+  .tool-nav {
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+
+    gap: 4px;
+  }
+
+  .tool-nav a {
+    flex: 0 0 auto;
+
+    min-height: 38px;
+
+    padding: 0 15px;
+
+    font-size: 13px;
+  }
+}
+
+
+/* =========================
+   RESPONSIVE CONTROLS
+========================== */
+
+@media (max-width: 700px) {
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .full {
+    grid-column: auto;
+  }
+}
+
+</style>
+  <link rel="icon" type="image/png" href="../logo.png" />
+<link rel="stylesheet" href="../ndc-suite.css?v=540" />
+</head>
+
+  <body class="ndc-chassis">
+<header class="ndc-suite-header"><a class="ndc-suite-brand" href="../index.html"><img src="../logo.png" width="44" height="44" alt="Next Dimension Customs logo"/><span><strong>NEXT DIMENSION CUSTOMS</strong><small>Document tools / NDC</small></span></a><nav class="ndc-suite-links" aria-label="NDC tools navigation"><a href="../index.html" ><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5Z"/><path d="M14 3v6h5M8 13h8m-8 4h6"/></svg>PDF Tools</a><a href="index.html" aria-current="page"><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17-1 4 4-1L20 7l-3-3Zm10-10 3 3"/></svg>Chassis Tools</a></nav></header>
+    <div class="app">
+      <h1>Vertical Dot-Stamped Text Generator</h1>
+      <nav class="tool-nav" aria-label="Chassis tool selection"><a href="index.html" >PDF & Pencil Scratch</a><a href="png.html" >Image to Pencil Sketch</a><a href="dotmatrix.html" aria-current="page" class="active">Dot Matrix</a></nav>
+
+      <div class="controls">
+        <div class="full">
+          <label>Text</label>
+          <input
+            id="textInput"
+            type="text"
+            value="SAMPLE TEXT"
+            maxlength="32" />
+        </div>
+
+        <div>
+          <label>Canvas Width</label>
+          <input id="width" type="number" value="1" min="1" max="1200" />
+        </div>
+
+        <div>
+          <label>Canvas Height</label>
+          <input id="height" type="number" value="1410" min="500" max="3000" />
+        </div>
+
+        <div>
+          <label>Dot Size</label>
+          <div class="range-row">
+            <input id="dotSize" type="range" min="2" max="12" value="5" />
+            <span class="value" id="dotSizeValue">5</span>
+          </div>
+        </div>
+
+        <div>
+          <label>Dot Spacing</label>
+          <div class="range-row">
+            <input id="spacing" type="range" min="3" max="18" value="8" />
+            <span class="value" id="spacingValue">8</span>
+          </div>
+        </div>
+
+        <div>
+          <label>Character Spacing</label>
+          <div class="range-row">
+            <input
+              id="charSpacing"
+              type="range"
+              min="-90"
+              max="35"
+              value="-10" />
+            <span class="value" id="charSpacingValue">13</span>
+          </div>
+        </div>
+
+        <div>
+          <label>Metal Texture</label>
+          <div class="range-row">
+            <input id="texture" type="range" min="0" max="100" value="65" />
+            <span class="value" id="textureValue">65</span>
+          </div>
+        </div>
+
+        <div class="full">
+          <button onclick="generate()">Generate</button>
+          <button onclick="downloadPNG()">Download PNG</button>
+        </div>
+      </div>
+
+      <div class="preview">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="caution-notice">
+        <h2 class="caution-title">Caution — Representation / Simulation
+          Tool</h2>
+
+        <div class="caution-description">
+          <p>
+            This Tool is intended solely for <strong>visual representation and
+              simulation purposes</strong>. The generator creates a simulated
+            dot-matrix printer appearance, including pixelated text, ink
+            patterns,
+            spacing, and other visual characteristics associated with
+            dot-matrix printing.
+          </p>
+
+          <p>
+            <strong>Do not use</strong> documents, text, or generated outputs
+            created
+            with this tool for any commercial, legal, official, financial,
+            educational, employment, verification, or government-related
+            process.
+          </p>
+
+          <p>
+            The generated output is <strong>a visual simulation and is not an
+              original or officially printed document</strong>. It must not be
+            presented as an authentic document, original printout, official
+            record,
+            or proof of issuance.
+          </p>
+
+          <p>
+            Any use of generated content for <strong>verification, submission,
+              authentication, fraud, forgery, misrepresentation, or any official
+              process</strong> is strictly prohibited and is entirely the
+            <strong>user's own responsibility</strong>.
+          </p>
+
+          <p>
+            The developer/provider of this tool <strong>does not accept
+              responsibility or liability</strong> for any misuse, claims,
+            losses,
+            penalties, legal consequences, or other damages resulting from the
+            use
+            of generated content.
+          </p>
+
+          <p>
+            <strong>By using this generator, you acknowledge that the output is
+              intended only as a visual simulation and that you are solely
+              responsible</strong> for how you use any generated content.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const metalTexture = new Image();
+
+      metalTexture.src = "./metal.jpg";
+
+      metalTexture.onload = () => {
+        generate();
+      };
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const textInput = document.getElementById("textInput");
+      const widthInput = document.getElementById("width");
+      const heightInput = document.getElementById("height");
+
+      const dotSizeInput = document.getElementById("dotSize");
+      const spacingInput = document.getElementById("spacing");
+      const charSpacingInput = document.getElementById("charSpacing");
+      const textureInput = document.getElementById("texture");
+
+      function updateLabels() {
+        document.getElementById("dotSizeValue").textContent =
+          dotSizeInput.value;
+
+        document.getElementById("spacingValue").textContent =
+          spacingInput.value;
+
+        document.getElementById("charSpacingValue").textContent =
+          charSpacingInput.value;
+
+        document.getElementById("textureValue").textContent =
+          textureInput.value;
+      }
+
+      [dotSizeInput, spacingInput, charSpacingInput, textureInput].forEach(
+        (el) => {
+          el.addEventListener("input", () => {
+            updateLabels();
+            generate();
+          });
+        },
+      );
+
+      textInput.addEventListener("input", generate);
+      widthInput.addEventListener("input", generate);
+      heightInput.addEventListener("input", generate);
+
+      /* -------------------------------------------------------
+   Seeded random number generator
+------------------------------------------------------- */
+
+      function seededRandom(seed) {
+        let x = Math.sin(seed++) * 10000;
+
+        return x - Math.floor(x);
+      }
+
+      /* -------------------------------------------------------
+   Metal background
+------------------------------------------------------- */
+      function drawMetal(width, height) {
+        if (!metalTexture.complete || !metalTexture.naturalWidth) {
+          return;
+        }
+
+        const imageRatio =
+          metalTexture.naturalWidth / metalTexture.naturalHeight;
+
+        const canvasRatio = width / height;
+
+        let drawWidth;
+        let drawHeight;
+        let offsetX;
+        let offsetY;
+
+        /*
+         * Cover the entire canvas while
+         * preserving the original image ratio.
+         */
+        if (canvasRatio > imageRatio) {
+          drawWidth = width;
+          drawHeight = width / imageRatio;
+
+          offsetX = 0;
+          offsetY = (height - drawHeight) / 2;
+        } else {
+          drawHeight = height;
+          drawWidth = height * imageRatio;
+
+          offsetX = (width - drawWidth) / 2;
+          offsetY = 0;
+        }
+
+        /*
+         * Draw the original metal image.
+         * No darkening.
+         * No overlay.
+         * No texture modification.
+         */
+        ctx.drawImage(metalTexture, offsetX, offsetY, drawWidth, drawHeight);
+      }
+      /* -------------------------------------------------------
+   Create dot matrix character
+------------------------------------------------------- */
+
+      const FONT = {
+        A: ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
+
+        B: ["11110", "10001", "10001", "11110", "10001", "10001", "11110"],
+
+        C: ["01111", "10000", "10000", "10000", "10000", "10000", "01111"],
+
+        D: ["11110", "10001", "10001", "10001", "10001", "10001", "11110"],
+
+        E: ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
+
+        F: ["11111", "10000", "10000", "11110", "10000", "10000", "10000"],
+
+        G: ["01111", "10000", "10000", "10111", "10001", "10001", "01111"],
+
+        H: ["10001", "10001", "10001", "11111", "10001", "10001", "10001"],
+
+        I: ["11111", "00100", "00100", "00100", "00100", "00100", "11111"],
+
+        J: ["00111", "00010", "00010", "00010", "10010", "10010", "01100"],
+
+        K: ["10001", "10010", "10100", "11000", "10100", "10010", "10001"],
+
+        L: ["10000", "10000", "10000", "10000", "10000", "10000", "11111"],
+
+        M: ["10001", "11011", "10101", "10101", "10001", "10001", "10001"],
+
+        N: ["10001", "11001", "11001", "10101", "10011", "10011", "10001"],
+
+        O: ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
+
+        P: ["11110", "10001", "10001", "11110", "10000", "10000", "10000"],
+
+        Q: ["01110", "10001", "10001", "10001", "10101", "10010", "01101"],
+
+        R: ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
+
+        S: ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+
+        T: ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+
+        U: ["10001", "10001", "10001", "10001", "10001", "10001", "01110"],
+
+        V: ["10001", "10001", "10001", "10001", "10001", "01010", "00100"],
+
+        W: ["10001", "10001", "10001", "10101", "10101", "11011", "10001"],
+
+        X: ["10001", "10001", "01010", "00100", "01010", "10001", "10001"],
+
+        Y: ["10001", "10001", "01010", "00100", "00100", "00100", "00100"],
+
+        Z: ["11111", "00001", "00010", "00100", "01000", "10000", "11111"],
+
+        0: ["01110", "10001", "10011", "10101", "11001", "10001", "01110"],
+
+        1: ["00100", "01100", "00100", "00100", "00100", "00100", "01110"],
+
+        2: ["01110", "10001", "00001", "00010", "00100", "01000", "11111"],
+
+        3: ["11110", "00001", "00001", "01110", "00001", "00001", "11110"],
+
+        4: ["00010", "00110", "01010", "10010", "11111", "00010", "00010"],
+
+        5: ["11111", "10000", "10000", "11110", "00001", "00001", "11110"],
+
+        6: ["01110", "10000", "10000", "11110", "10001", "10001", "01110"],
+
+        7: ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
+
+        8: ["01110", "10001", "10001", "01110", "10001", "10001", "01110"],
+
+        9: ["01110", "10001", "10001", "01111", "00001", "00001", "01110"],
+      };
+
+      /* -------------------------------------------------------
+   Draw individual stamped dot
+------------------------------------------------------- */
+
+      function drawDot(x, y, r) {
+        /*
+         * Dark depression/shadow
+         */
+        ctx.beginPath();
+
+        ctx.arc(x + 1.2, y + 1.5, r * 1.12, 0, Math.PI * 2);
+
+        ctx.fillStyle = "rgba(0,0,0,.85)";
+
+        ctx.fill();
+
+        /*
+         * Bright raised metal edge
+         */
+        ctx.beginPath();
+
+        ctx.arc(x - 0.7, y - 0.8, r, 0, Math.PI * 2);
+
+        const g = ctx.createRadialGradient(
+          x - r * 0.35,
+          y - r * 0.4,
+          r * 0.1,
+          x,
+          y,
+          r,
+        );
+
+        g.addColorStop(0, "rgba(255,255,255,.95)");
+
+        g.addColorStop(0.45, "rgba(190,190,190,.95)");
+
+        g.addColorStop(1, "rgba(75,75,75,.9)");
+
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        /*
+         * Tiny highlight
+         */
+        ctx.beginPath();
+
+        ctx.arc(x - r * 0.35, y - r * 0.4, r * 0.18, 0, Math.PI * 2);
+
+        ctx.fillStyle = "rgba(255,255,255,.8)";
+
+        ctx.fill();
+      }
+
+      /* -------------------------------------------------------
+   Render text vertically
+------------------------------------------------------- */
+
+      function drawVerticalText(text) {
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const dotSize = Number(dotSizeInput.value);
+        const spacing = Number(spacingInput.value);
+        const charSpacing = Number(charSpacingInput.value);
+
+        const cell = dotSize + spacing;
+
+        text = text.toUpperCase();
+
+        /*
+         * Character dimensions
+         */
+        const charWidth = 5 * cell;
+        const charHeight = 7 * cell;
+
+        /*
+         * Gap between characters
+         */
+        const totalHeight =
+          text.length * charHeight + (text.length - 1) * charSpacing;
+
+        let y = (height - totalHeight) / 2;
+
+        if (y < 30) {
+          y = 30;
+        }
+
+        /*
+         * LEFT TILT
+         *
+         * Negative angle = tilt to the left.
+         *
+         * -5  = very slight
+         * -10 = natural
+         * -12 = noticeable
+         * -15 = strong
+         */
+        const tiltAngle = (90 * Math.PI) / 180;
+
+        for (let char of text) {
+          const matrix = FONT[char];
+
+          if (!matrix) {
+            y += charHeight + charSpacing;
+            continue;
+          }
+
+          /*
+           * Center of this character
+           */
+          const centerX = width / 2;
+          const centerY = y + charHeight / 2;
+
+          /*
+           * Save canvas state before rotating
+           */
+          ctx.save();
+
+          /*
+           * Move origin to character center
+           */
+          ctx.translate(centerX, centerY);
+
+          /*
+           * Tilt character to LEFT
+           */
+          ctx.rotate(tiltAngle);
+
+          /*
+           * Draw character relative
+           * to its center
+           */
+          const startX = -charWidth / 2;
+
+          const startY = -charHeight / 2;
+
+          for (let row = 0; row < matrix.length; row++) {
+            for (let col = 0; col < matrix[row].length; col++) {
+              if (matrix[row][col] === "1") {
+                const px = startX + col * cell + cell / 2;
+
+                const py = startY + row * cell + cell / 2;
+
+                /*
+                 * Slight random movement
+                 * for stamped appearance
+                 */
+                const jitterX = (Math.random() - 0.5) * 0.8;
+
+                const jitterY = (Math.random() - 0.5) * 0.8;
+
+                drawDot(px + jitterX, py + jitterY, dotSize);
+              }
+            }
+          }
+
+          /*
+           * Restore canvas before
+           * moving to next character
+           */
+          ctx.restore();
+
+          /*
+           * Move downward to next character
+           */
+          y += charHeight + charSpacing;
+        }
+      }
+      /* -------------------------------------------------------
+   SAMPLE watermark
+------------------------------------------------------- */
+
+      function drawWatermark() {}
+
+      /* -------------------------------------------------------
+   Generate
+------------------------------------------------------- */
+
+      function generate() {
+        updateLabels();
+
+        let width = Number(widthInput.value);
+
+        let height = Number(heightInput.value);
+
+        width = Math.max(250, Math.min(1200, width));
+
+        height = Math.max(500, Math.min(3000, height));
+
+        canvas.width = width;
+        canvas.height = height;
+
+        drawMetal(width, height);
+
+        drawVerticalText(textInput.value || "SAMPLE");
+
+        drawWatermark();
+      }
+
+      /* -------------------------------------------------------
+   Download
+------------------------------------------------------- */
+
+      function downloadPNG() {
+        generate();
+
+        const link = document.createElement("a");
+
+        link.download = "dot-stamped-sample.png";
+
+        link.href = canvas.toDataURL("image/png");
+
+        link.click();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,339 @@
+:root {
+  /* =========================
+     CORE THEME
+  ========================== */
+
+  --bg: #05080a;
+
+  --card: #0b1114;
+
+  --card-2: #0f171b;
+
+  --card-3: #131e23;
+
+  --text: #d8f7f5;
+
+  --text-primary: #efffff;
+
+  --text-secondary: #91b8ba;
+
+  --text-muted: #58777a;
+
+  /* =========================
+     CYAN / ELECTRIC BLUE BRAND
+  ========================== */
+
+  --brand: #00d4ff;
+
+  --brand-bright: #18e8ff;
+
+  --brand-dark: #008eaa;
+
+  --brand-muted: #126071;
+
+  --brand-soft: #08252b;
+
+  /* =========================
+     BORDERS
+  ========================== */
+
+  --line: #173037;
+
+  --line-light: #21444c;
+
+  --line-dark: #0d1d21;
+
+  /* =========================
+     BACKGROUNDS
+  ========================== */
+
+  --input-bg: #070d10;
+
+  --hover-bg: #0d2025;
+
+  --active-bg: #10343c;
+
+  --disabled-bg: #101719;
+
+  /* =========================
+     STATUS
+  ========================== */
+
+  --success: #20e0b2;
+
+  --danger: #ff5570;
+
+  --warning: #ffc857;
+
+  /* =========================
+     SHADOWS
+  ========================== */
+
+  --shadow: rgba(0, 0, 0, 0.55);
+
+  --shadow-heavy: rgba(0, 0, 0, 0.8);
+
+  --brand-shadow: rgba(0, 212, 255, 0.14);
+}
+/* =========================
+   CAUTION NOTICE
+========================== */
+/* =========================================================
+   CAUTION NOTICE
+   Independent Amber / Warning Theme
+========================================================= */
+
+.caution-notice {
+  --caution-bg: #100d08;
+  --caution-bg-deep: #0b0906;
+
+  --caution-accent: #ffb52e;
+  --caution-accent-bright: #ffc857;
+  --caution-accent-dark: #9a6818;
+
+  --caution-text: #eee5d2;
+  --caution-text-bright: #fff4d6;
+  --caution-text-muted: #a99d87;
+
+  --caution-border: #3b2d18;
+  --caution-border-soft: #292015;
+
+  --caution-highlight: rgba(255, 181, 46, 0.08);
+  --caution-glow: rgba(255, 181, 46, 0.12);
+
+  max-width: 1400px;
+
+  margin: 20px auto;
+  padding: 20px 22px;
+
+  position: relative;
+
+  background: linear-gradient(
+    135deg,
+    var(--caution-bg),
+    var(--caution-bg-deep)
+  );
+
+  border: 1px solid var(--caution-border);
+  border-left: 5px solid var(--caution-accent);
+
+  border-radius: 9px;
+
+  color: var(--caution-text);
+
+  font-family: Arial, sans-serif;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.55),
+    0 0 22px var(--caution-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+  overflow: hidden;
+}
+
+/* =========================================================
+   SUBTLE TOP HIGHLIGHT
+========================================================= */
+
+.caution-notice::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 181, 46, 0.45),
+    transparent
+  );
+}
+
+/* =========================================================
+   CAUTION TITLE
+========================================================= */
+
+.caution-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin: 0 0 15px;
+
+  color: var(--caution-accent-bright);
+
+  font-size: 17px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   WARNING ICON
+========================================================= */
+
+.caution-title::before {
+  content: "⚠";
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+
+  color: #1a1203;
+
+  background: var(--caution-accent);
+
+  border: 1px solid var(--caution-accent-bright);
+
+  border-radius: 6px;
+
+  font-size: 15px;
+  font-weight: 900;
+
+  flex-shrink: 0;
+
+  box-shadow: 0 0 12px rgba(255, 181, 46, 0.18);
+}
+
+/* =========================================================
+   CAUTION CONTENT
+========================================================= */
+
+.caution-description {
+  font-size: 13px;
+
+  line-height: 1.65;
+
+  color: var(--caution-text-muted);
+}
+
+/* =========================================================
+   PARAGRAPHS
+========================================================= */
+
+.caution-description p {
+  margin: 0 0 11px;
+
+  padding: 2px 0 2px 13px;
+
+  border-left: 1px solid var(--caution-border);
+}
+
+.caution-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   IMPORTANT TEXT
+========================================================= */
+
+.caution-description strong {
+  font-weight: 700;
+
+  color: var(--caution-text-bright);
+}
+
+/* =========================================================
+   FINAL RESPONSIBILITY MESSAGE
+========================================================= */
+
+.caution-description p:last-child {
+  margin-top: 16px;
+
+  padding: 12px 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 181, 46, 0.075),
+    rgba(255, 181, 46, 0.025)
+  );
+
+  border: 1px solid var(--caution-border);
+
+  border-left: 3px solid var(--caution-accent);
+
+  border-radius: 6px;
+
+  color: var(--caution-text-bright);
+
+  box-shadow: inset 0 0 18px rgba(255, 181, 46, 0.025);
+}
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.caution-notice:hover {
+  border-color: var(--caution-accent-dark);
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(255, 181, 46, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .caution-notice {
+    margin: 15px auto;
+
+    padding: 16px;
+
+    border-left-width: 4px;
+
+    border-radius: 8px;
+  }
+
+  .caution-title {
+    gap: 9px;
+
+    margin-bottom: 13px;
+
+    font-size: 15px;
+  }
+
+  .caution-title::before {
+    width: 24px;
+    height: 24px;
+
+    font-size: 13px;
+
+    border-radius: 5px;
+  }
+
+  .caution-description {
+    padding-left: 0;
+
+    font-size: 12.5px;
+
+    line-height: 1.6;
+  }
+
+  .caution-description p {
+    padding-left: 10px;
+  }
+
+  .caution-description p:last-child {
+    padding: 10px 11px;
+  }
+}

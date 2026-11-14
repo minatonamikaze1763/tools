@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Legacy Chassis PDF Editor | NDC Tools</title>
+    <style>
+      :root {
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --text: #111827;
+        --muted: #6b7280;
+        --line: #d1d5db;
+        --brand: #111111;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          Segoe UI,
+          Roboto,
+          Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      a {
+        color: var(--brand);
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+      .wrap {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 18px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 18px;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+      }
+      .panel h2 {
+        margin: 0 0 14px;
+        font-size: 18px;
+      }
+      .section {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid #eceff3;
+      }
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      input,
+      select,
+      button {
+        font: inherit;
+      }
+      input[type="text"],
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+      }
+      input[type="file"] {
+        width: 100%;
+      }
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .primary {
+        background: var(--brand);
+        color: #fff;
+        width: 100%;
+        margin-top: 16px;
+      }
+      .secondary {
+        background: #ececec;
+        color: #111;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+        line-height: 1.4;
+      }
+      #stageWrap {
+        overflow: auto;
+        max-height: 82vh;
+        background: #e5e7eb;
+        border-radius: 14px;
+        padding: 18px;
+        text-align: center;
+      }
+      .pageBox {
+        position: relative;
+        display: inline-block;
+        background: #fff;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+      }
+      .pageCanvas {
+        display: block;
+      }
+      .overlay {
+        position: absolute;
+        border: 2px dashed #2563eb;
+        background: rgba(37, 99, 235, 0.08);
+        cursor: move;
+        box-sizing: border-box;
+        min-width: 40px;
+        min-height: 20px;
+      }
+      .overlay:after {
+        content: "drag / resize";
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 11px;
+        padding: 3px 6px;
+        border-radius: 999px;
+      }
+      .handle {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        right: -8px;
+        bottom: -8px;
+        background: #2563eb;
+        border-radius: 50%;
+        cursor: nwse-resize;
+      }
+      .status {
+        margin-top: 12px;
+        font-size: 13px;
+        color: #2563eb;
+        min-height: 18px;
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        #stageWrap {
+          max-height: none;
+        }
+      }
+      #hidden {
+        display: none;
+      }
+    </style>
+  <link rel="icon" type="image/png" href="../logo.png" />
+<link rel="stylesheet" href="../ndc-suite.css?v=540" />
+</head>
+  <body class="ndc-chassis">
+<header class="ndc-suite-header"><a class="ndc-suite-brand" href="../index.html"><img src="../logo.png" width="44" height="44" alt="Next Dimension Customs logo"/><span><strong>NEXT DIMENSION CUSTOMS</strong><small>Document tools / NDC</small></span></a><nav class="ndc-suite-links" aria-label="NDC tools navigation"><a href="../index.html" ><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5Z"/><path d="M14 3v6h5M8 13h8m-8 4h6"/></svg>PDF Tools</a><a href="index.html" aria-current="page"><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17-1 4 4-1L20 7l-3-3Zm10-10 3 3"/></svg>Chassis Tools</a></nav></header>
+    <div class="wrap">
+      <h1>Legacy Chassis PDF Editor</h1><nav class="tool-nav" aria-label="Chassis tool selection"><a href="index.html" >PDF & Pencil Scratch</a><a href="png.html" >Image to Pencil Sketch</a><a href="dotmatrix.html" >Dot Matrix</a></nav>
+      <p class="sub">
+        Add a sharp chassis pencil-print, signature PNG, and stamp PNG onto a
+        PDF and download the modified file.
+      </p>
+
+      <div class="layout">
+        <div class="panel">
+          <h2>PDF Controls</h2>
+
+          <label>Upload PDF</label>
+          <input id="pdfFile" type="file" accept="application/pdf" />
+
+          <div class="section" id="hidden">
+            >
+            <h2>Chassis Pencil Print</h2>
+
+            <label>Chassis Number</label>
+            <input
+              id="numberText"
+              type="text"
+              placeholder="Example: AK5CT2401098"
+            />
+
+            <label>Orientation</label>
+            <select id="rotation">
+              <option value="0">Horizontal</option>
+              <option value="90">Vertical Down</option>
+              <option value="-90">Vertical Up</option>
+            </select>
+
+            <label>Blur Amount</label>
+            <input id="blurAmount" type="number" min="0" max="20" value="2" />
+            <label>Preview</label>
+            <canvas
+              id="chassisPreview"
+              style="
+                width: 100%;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background: #fff;
+              "
+            ></canvas>
+            <div class="hint">
+              Text stays sharp. Only the scratch texture is blurred. The chassis
+              image is drawn without stretching.
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>Signature PNG</h2>
+
+            <label>Upload Signature</label>
+            <input
+              id="signatureFile"
+              type="file"
+              accept="image/png,image/jpeg"
+            />
+
+            <div class="hint">
+              Transparent PNG recommended. Place by dragging the green box.
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>Stamp PNG</h2>
+            <a href="png.html" id="png" class="html"
+              >Get Chassis pencil print
+            </a>
+            <label>Upload Stamp</label>
+            <input id="stampFile" type="file" accept="image/png,image/jpeg" />
+
+            <div class="hint">
+              Transparent PNG recommended. Place by dragging the orange box.
+            </div>
+          </div>
+
+          <button class="primary" id="downloadPdf">
+            Download Modified PDF
+          </button>
+          <button class="secondary" id="resetBoxes">Reset Boxes</button>
+
+          <div class="status" id="status"></div>
+        </div>
+
+        <div class="panel">
+          <div id="stageWrap">
+            <div class="pageBox" id="pageBox">
+              <canvas id="pageCanvas" class="pageCanvas"></canvas>
+
+              <!-- Chassis placement -->
+              <div
+                class="overlay"
+                id="chassisBox"
+                style="left: 120px; top: 120px; width: 360px; height: 90px"
+              >
+                <div class="handle"></div>
+              </div>
+
+              <!-- Signature placement -->
+              <div class="overlay" id="signatureBox">
+                <img
+                  id="signaturePreview"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    pointer-events: none;
+                  "
+                />
+
+                <div class="handle" style="background: #16a34a"></div>
+              </div>
+
+              <!-- Stamp placement -->
+              <div class="overlay" id="stampBox">
+                <img
+                  id="stampPreview"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    pointer-events: none;
+                  "
+                />
+
+                <div class="handle" style="background: #ea580c"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      const pageCanvas = document.getElementById("pageCanvas");
+      const pageCtx = pageCanvas.getContext("2d");
+      const pageBox = document.getElementById("pageBox");
+      const statusEl = document.getElementById("status");
+
+      let pdfBytes = null;
+      let originalPdfBuffer = null;
+      let pdfDocPreview = null;
+      let currentViewport = null;
+      function updateChassisPreview() {
+        const preview = document.getElementById("chassisPreview");
+
+        if (!preview) return;
+
+        const text = document.getElementById("numberText").value.trim();
+
+        if (!text) {
+          const ctx = preview.getContext("2d");
+
+          ctx.clearRect(0, 0, preview.width, preview.height);
+
+          return;
+        }
+
+        const blur = parseInt(
+          document.getElementById("blurAmount").value || "2",
+        );
+
+        const src = createChassisCanvas(text, blur);
+
+        preview.width = src.width;
+
+        preview.height = src.height;
+
+        const ctx = preview.getContext("2d");
+
+        ctx.clearRect(0, 0, preview.width, preview.height);
+
+        ctx.drawImage(src, 0, 0);
+      }
+      function setStatus(msg) {
+        statusEl.textContent = msg || "";
+      }
+
+      async function loadPdfPreview(file) {
+        originalPdfBuffer = await file.arrayBuffer();
+
+        pdfBytes = new Uint8Array(originalPdfBuffer);
+
+        const loadingTask = pdfjsLib.getDocument({
+          data: pdfBytes.slice(),
+        });
+
+        pdfDocPreview = await loadingTask.promise;
+
+        const page = await pdfDocPreview.getPage(1);
+
+        const maxWidth = 850;
+
+        let viewport = page.getViewport({
+          scale: 1,
+        });
+
+        let scale = maxWidth / viewport.width;
+
+        currentViewport = page.getViewport({
+          scale: Math.min(scale, 1),
+        });
+
+        pageCanvas.width = currentViewport.width;
+        pageCanvas.height = currentViewport.height;
+
+        await page.render({
+          canvasContext: pageCtx,
+          viewport: currentViewport,
+        }).promise;
+
+        pageBox.style.width = pageCanvas.width + "px";
+        pageBox.style.height = pageCanvas.height + "px";
+
+        setStatus("PDF loaded.");
+      }
+      document
+        .getElementById("pdfFile")
+        .addEventListener("change", async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            await loadPdfPreview(file);
+          } catch (err) {
+            console.error(err);
+            setStatus("Failed to load PDF.");
+          }
+        });
+
+      // Simple drag + resize helper
+      function makeInteractive(box) {
+        const handle = box.querySelector(".handle");
+        let mode = null;
+        let startX = 0,
+          startY = 0,
+          startLeft = 0,
+          startTop = 0,
+          startW = 0,
+          startH = 0;
+
+        box.addEventListener("mousedown", (e) => {
+          if (e.target === handle) {
+            mode = "resize";
+          } else {
+            mode = "move";
+          }
+          startX = e.clientX;
+          startY = e.clientY;
+          startLeft = box.offsetLeft;
+          startTop = box.offsetTop;
+          startW = box.offsetWidth;
+          startH = box.offsetHeight;
+          e.preventDefault();
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (!mode) return;
+
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+
+          if (mode === "move") {
+            box.style.left = startLeft + dx + "px";
+            box.style.top = startTop + dy + "px";
+          } else {
+            box.style.width = Math.max(40, startW + dx) + "px";
+            box.style.height = Math.max(20, startH + dy) + "px";
+          }
+        });
+
+        document.addEventListener("mouseup", () => {
+          mode = null;
+        });
+      }
+
+      makeInteractive(document.getElementById("chassisBox"));
+      makeInteractive(document.getElementById("signatureBox"));
+      makeInteractive(document.getElementById("stampBox"));
+
+      // Create sharp chassis texture
+      function createChassisCanvas(text, blurAmount) {
+        // Temporary canvas for measuring
+        const measureCanvas = document.createElement("canvas");
+
+        const measureCtx = measureCanvas.getContext("2d");
+
+        let size = 56;
+
+        measureCtx.font = `700 ${size}px Consolas`;
+
+        while (size > 16) {
+          measureCtx.font = `700 ${size}px Consolas`;
+
+          if (measureCtx.measureText(text).width <= 560) break;
+
+          size--;
+        }
+
+        measureCtx.font = `700 ${size}px Consolas`;
+
+        const textWidth = measureCtx.measureText(text).width;
+
+        const c = document.createElement("canvas");
+
+        c.width = Math.ceil(textWidth) + 40;
+
+        c.height = size + 40;
+
+        const ctx = c.getContext("2d");
+
+        // scratches
+        ctx.filter = `blur(${blurAmount}px)`;
+
+        ctx.strokeStyle = "rgba(0,0,0,.18)";
+
+        ctx.lineWidth = 1.2;
+
+        const scratchCount = 250 + blurAmount * 100;
+
+        for (let i = 0; i < scratchCount; i++) {
+          const x = Math.random() * c.width;
+
+          const y = Math.random() * c.height;
+
+          const len = 10 + Math.random() * 25;
+
+          ctx.beginPath();
+
+          ctx.moveTo(x, y);
+
+          ctx.lineTo(x + len, y + (Math.random() * 4 - 2));
+
+          ctx.stroke();
+        }
+
+        // chassis text
+        ctx.filter = "none";
+
+        ctx.font = `700 ${size}px Consolas`;
+
+        ctx.fillStyle = "rgba(0,0,0,.85)";
+
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(text, 20, c.height / 2);
+
+        return c;
+      }
+
+      async function embedImage(pdfDoc, file) {
+        const bytes = await file.arrayBuffer();
+        const isPng =
+          file.type === "image/png" || file.name.toLowerCase().endsWith(".png");
+        return isPng
+          ? await pdfDoc.embedPng(bytes)
+          : await pdfDoc.embedJpg(bytes);
+      }
+
+      function boxToPdfCoords(box, page, viewport) {
+        const scaleX = page.getWidth() / viewport.width;
+        const scaleY = page.getHeight() / viewport.height;
+
+        const x = box.offsetLeft * scaleX;
+        const y =
+          page.getHeight() - (box.offsetTop + box.offsetHeight) * scaleY;
+        const width = box.offsetWidth * scaleX;
+        const height = box.offsetHeight * scaleY;
+
+        return { x, y, width, height };
+      }
+
+      document
+        .getElementById("downloadPdf")
+        .addEventListener("click", async () => {
+          if (!pdfBytes) {
+            alert("Please upload a PDF first.");
+            return;
+          }
+
+          try {
+            setStatus("Preparing PDF...");
+            console.log("pdfBytes:", pdfBytes);
+
+            console.log("length:", pdfBytes?.length);
+            const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes.slice());
+            const page = pdfDoc.getPages()[0];
+
+            // Chassis
+            const chassisText = document
+              .getElementById("numberText")
+              .value.trim();
+            if (chassisText) {
+              const blur = parseInt(
+                document.getElementById("blurAmount").value || "2",
+                10,
+              );
+              const rotation = parseInt(
+                document.getElementById("rotation").value || "0",
+                10,
+              );
+
+              const chassisCanvas = createChassisCanvas(chassisText, blur);
+              const pngBytes = await new Promise((resolve, reject) => {
+                chassisCanvas.toBlob(async (blob) => {
+                  if (!blob) {
+                    reject(new Error("Failed to generate chassis image"));
+                    return;
+                  }
+
+                  resolve(await blob.arrayBuffer());
+                }, "image/png");
+              });
+
+              const chassisImg = await pdfDoc.embedPng(pngBytes);
+
+              const box = document.getElementById("chassisBox");
+              const { x, y, width, height } = boxToPdfCoords(
+                box,
+                page,
+                currentViewport,
+              );
+
+              // Preserve natural aspect ratio (NO STRETCH)
+              const naturalRatio = chassisCanvas.width / chassisCanvas.height;
+
+              let drawW = width;
+              let drawH = drawW / naturalRatio;
+
+              if (drawH > height) {
+                drawH = height;
+                drawW = drawH * naturalRatio;
+              }
+
+              page.drawImage(chassisImg, {
+                x,
+                y: y + (height - drawH) / 2,
+                width: drawW,
+                height: drawH,
+                rotate: PDFLib.degrees(rotation),
+              });
+            }
+
+            // Signature
+            const sigFile = document.getElementById("signatureFile").files[0];
+            if (sigFile) {
+              const sigImg = await embedImage(pdfDoc, sigFile);
+              const box = document.getElementById("signatureBox");
+              const { x, y, width, height } = boxToPdfCoords(
+                box,
+                page,
+                currentViewport,
+              );
+
+              page.drawImage(sigImg, {
+                x,
+                y,
+                width,
+                height,
+              });
+            }
+
+            // Stamp
+            const stampFile = document.getElementById("stampFile").files[0];
+            if (stampFile) {
+              const stampImg = await embedImage(pdfDoc, stampFile);
+              const box = document.getElementById("stampBox");
+              const { x, y, width, height } = boxToPdfCoords(
+                box,
+                page,
+                currentViewport,
+              );
+
+              page.drawImage(stampImg, {
+                x,
+                y,
+                width,
+                height,
+              });
+            }
+
+            setStatus("Generating download...");
+
+            const outBytes = await pdfDoc.save();
+            const blob = new Blob([outBytes], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "modified_vehicle_document.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            URL.revokeObjectURL(url);
+            setStatus("Download started.");
+          } catch (err) {
+            console.error(err);
+            setStatus("Failed to generate PDF.");
+            alert("Error while generating PDF. Check the console for details.");
+          }
+        });
+
+      document.getElementById("resetBoxes").addEventListener("click", () => {
+        const chassis = document.getElementById("chassisBox");
+        chassis.style.left = "120px";
+        chassis.style.top = "120px";
+        chassis.style.width = "360px";
+        chassis.style.height = "90px";
+
+        const sig = document.getElementById("signatureBox");
+        sig.style.left = "120px";
+        sig.style.top = "240px";
+        sig.style.width = "220px";
+        sig.style.height = "80px";
+
+        const stamp = document.getElementById("stampBox");
+        stamp.style.left = "380px";
+        stamp.style.top = "240px";
+        stamp.style.width = "160px";
+        stamp.style.height = "160px";
+
+        setStatus("Placement boxes reset.");
+      });
+      function updateOrientationBox() {
+        const value = document.getElementById("rotation").value;
+
+        const box = document.getElementById("chassisBox");
+
+        if (!box) return;
+
+        if (value === "0") {
+          box.style.width = "360px";
+
+          box.style.height = "90px";
+        } else {
+          box.style.width = "90px";
+
+          box.style.height = "360px";
+        }
+      }
+      document
+        .getElementById("rotation")
+        .addEventListener("change", updateOrientationBox);
+
+      updateOrientationBox();
+      document
+        .getElementById("numberText")
+        .addEventListener("input", updateChassisPreview);
+
+      document
+        .getElementById("blurAmount")
+        .addEventListener("input", updateChassisPreview);
+      document
+        .getElementById("signatureFile")
+        .addEventListener("change", (e) => {
+          const file = e.target.files[0];
+
+          if (!file) return;
+
+          document.getElementById("signaturePreview").src =
+            URL.createObjectURL(file);
+        });
+      document.getElementById("stampFile").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const preview = document.getElementById("stampPreview");
+
+        if (preview) {
+          preview.src = URL.createObjectURL(file);
+        }
+      });
+    </script>
+  </body>
+</html>

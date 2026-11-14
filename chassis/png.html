@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image to Pencil Sketch | NDC Tools</title>
+
+    <style>
+      :root {
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --text: #111827;
+        --muted: #6b7280;
+        --line: #d1d5db;
+        --brand: #2563eb;
+
+        --brand-light: #3b82f6;
+        --shadow: rgba(0, 0, 0, 0.12);
+        --shadow-soft: rgba(0, 0, 0, 0.06);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      a {
+        color: var(--brand);
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        padding: 40px 20px;
+
+        background: linear-gradient(
+          135deg,
+          var(--bg) 0%,
+          color-mix(in srgb, var(--bg) 85%, var(--brand) 15%) 50%,
+          color-mix(in srgb, var(--bg) 75%, var(--brand) 25%) 100%
+        );
+
+        color: var(--text);
+      }
+
+      h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+
+        color: var(--text);
+        text-shadow: 0 2px 8px var(--shadow-soft);
+      }
+
+      input[type="file"] {
+        padding: 12px;
+        border-radius: 12px;
+
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+
+        backdrop-filter: blur(10px);
+
+        box-shadow:
+          0 8px 25px var(--shadow-soft),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+        cursor: pointer;
+      }
+
+      button {
+        border: none;
+        outline: none;
+
+        padding: 14px 24px;
+        margin: 12px 8px;
+
+        border-radius: 14px;
+
+        font-size: 15px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        color: white;
+
+        background: linear-gradient(135deg, var(--brand), var(--brand-light));
+
+        box-shadow:
+          0 10px 20px color-mix(in srgb, var(--brand) 25%, transparent),
+          0 4px 8px color-mix(in srgb, var(--brand) 15%, transparent);
+
+        transition: all 0.25s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+          0 14px 28px color-mix(in srgb, var(--brand) 35%, transparent),
+          0 6px 12px color-mix(in srgb, var(--brand) 20%, transparent);
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      canvas {
+        margin-top: 30px;
+
+        max-width: 95%;
+        height: auto;
+
+        border-radius: 18px;
+
+        background: var(--card);
+
+        padding: 12px;
+
+        border: 1px solid var(--line);
+
+        box-shadow:
+          0 20px 40px var(--shadow),
+          0 4px 12px var(--shadow-soft);
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+    </style>
+  <link rel="icon" type="image/png" href="../logo.png" />
+<link rel="stylesheet" href="../ndc-suite.css?v=540" />
+</head>
+
+  <body class="ndc-chassis">
+<header class="ndc-suite-header"><a class="ndc-suite-brand" href="../index.html"><img src="../logo.png" width="44" height="44" alt="Next Dimension Customs logo"/><span><strong>NEXT DIMENSION CUSTOMS</strong><small>Document tools / NDC</small></span></a><nav class="ndc-suite-links" aria-label="NDC tools navigation"><a href="../index.html" ><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5Z"/><path d="M14 3v6h5M8 13h8m-8 4h6"/></svg>PDF Tools</a><a href="index.html" aria-current="page"><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17-1 4 4-1L20 7l-3-3Zm10-10 3 3"/></svg>Chassis Tools</a></nav></header>
+    <main class="ndc-simple-tool"><h1>Image to Pencil Sketch</h1><nav class="tool-nav" aria-label="Chassis tool selection"><a href="index.html" >PDF & Pencil Scratch</a><a href="png.html" aria-current="page" class="active">Image to Pencil Sketch</a><a href="dotmatrix.html" >Dot Matrix</a></nav>
+
+    <input type="file" id="upload" accept="image/*" />
+
+    <br />
+    <a href="index.html" id="png" class="html">GO TO HOME </a>
+
+    <button onclick="convertSketch()">Convert To Pencil Sketch</button>
+
+    <button onclick="downloadPNG()">Download PNG</button>
+
+    <br />
+
+    <canvas id="canvas"></canvas>
+
+    </main>
+    <script>
+      const upload = document.getElementById("upload");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let img = new Image();
+
+      upload.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          img.onload = function () {
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            ctx.drawImage(img, 0, 0);
+          };
+
+          img.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+      function convertSketch() {
+        if (!img.src) {
+          alert("Upload an image first");
+          return;
+        }
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Original image
+        let original = ctx.getImageData(0, 0, width, height);
+        let gray = new Uint8ClampedArray(original.data);
+
+        // STEP 1 - Grayscale
+        for (let i = 0; i < gray.length; i += 4) {
+          let g = gray[i] * 0.299 + gray[i + 1] * 0.587 + gray[i + 2] * 0.114;
+
+          gray[i] = g;
+          gray[i + 1] = g;
+          gray[i + 2] = g;
+        }
+
+        // STEP 2 - Invert
+        let inverted = new Uint8ClampedArray(gray);
+
+        for (let i = 0; i < inverted.length; i += 4) {
+          inverted[i] = 255 - inverted[i];
+          inverted[i + 1] = 255 - inverted[i + 1];
+          inverted[i + 2] = 255 - inverted[i + 2];
+        }
+
+        // STEP 3 - Blur (simple box blur)
+        let blurred = new Uint8ClampedArray(inverted);
+
+        let radius = 6;
+
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; x < width; x++) {
+            let total = 0;
+            let count = 0;
+
+            for (let dy = -radius; dy <= radius; dy++) {
+              for (let dx = -radius; dx <= radius; dx++) {
+                let nx = x + dx;
+                let ny = y + dy;
+
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                  let idx = (ny * width + nx) * 4;
+
+                  total += inverted[idx];
+                  count++;
+                }
+              }
+            }
+
+            let avg = total / count;
+            let idx = (y * width + x) * 4;
+
+            blurred[idx] = avg;
+            blurred[idx + 1] = avg;
+            blurred[idx + 2] = avg;
+          }
+        }
+
+        // STEP 4 - Color Dodge
+        let result = ctx.createImageData(width, height);
+
+        for (let i = 0; i < gray.length; i += 4) {
+          let base = gray[i];
+          let blend = blurred[i];
+
+          let val =
+            blend === 255 ? 255 : Math.min(255, (base * 255) / (255 - blend));
+
+          result.data[i] = val;
+          result.data[i + 1] = val;
+          result.data[i + 2] = val;
+          result.data[i + 3] = 255;
+        }
+
+        // STEP 5 - Slight paper grain
+        for (let i = 0; i < result.data.length; i += 4) {
+          let grain = Math.random() * 12 - 6;
+
+          result.data[i] += grain;
+          result.data[i + 1] += grain;
+          result.data[i + 2] += grain;
+        }
+
+        ctx.putImageData(result, 0, 0);
+      }
+      function downloadPNG() {
+        const link = document.createElement("a");
+
+        link.download = "pencil_sketch.png";
+        link.href = canvas.toDataURL("image/png");
+
+        link.click();
+      }
+    </script>
+  </body>
+</html>
