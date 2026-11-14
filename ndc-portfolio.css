@@ -1,0 +1,83 @@
+/* NDC portfolio design system adapted for working document tools.
+   Reference: NDC/style.css. Canvas artwork and file processing are untouched. */
+:root {
+ --bg:#090909; --secondary:#101010; --card:#191919; --raised:#20201e;
+ --text:#f7f3e9; --ink:#f7f3e9; --text-primary:#f7f3e9;
+ --muted:#a9a49a; --text-secondary:#a9a49a; --text-muted:#8f897e;
+ --gold:#d7bd55; --highlight:#f2d889; --brand:#d7bd55; --brand-bright:#f2d889; --brand-dark:#a78d2c;
+ --line:rgba(255,255,255,.11); --line-light:rgba(215,189,85,.35); --line-dark:#24231f;
+ --accent-line:rgba(215,189,85,.35); --accent-bg:rgba(215,189,85,.09);
+ --brand-muted:rgba(215,189,85,.35); --brand-soft:rgba(215,189,85,.09);
+ --input-bg:#101010; --hover-bg:#242017; --active-bg:#30291a; --card-2:#20201e; --card-3:#282722;
+ --ui:"DM Sans","Segoe UI",sans-serif; --heading:"Space Grotesk","Segoe UI",sans-serif;
+ --ndc-ui:var(--ui); --ndc-heading:var(--heading); --radius:22px; --shadow:0 18px 45px #0002;
+ --pad:clamp(22px,3vw,36px); --gap:24px;
+}
+body.ndc-tools-page { margin:0; padding:0; display:block; background:var(--bg); color:var(--text); font:400 16px/1.65 var(--ui); -webkit-font-smoothing:antialiased; }
+.ndc-tools-page ::selection { background:var(--gold); color:var(--bg); }
+.ndc-tools-page :is(button,input,select,textarea) { font-family:var(--ui); }
+.ndc-tools-page :is(h1,h2,h3,h4) { font-family:var(--heading); }
+.ndc-tools-page :is(a,button,input,textarea,select):focus-visible { outline:2px solid var(--highlight); outline-offset:4px; }
+.ndc-tools-page .ndc-suite-header { position:sticky; top:0; z-index:100; display:block; width:100%; padding:0; min-height:82px; background:rgba(9,11,19,.9); backdrop-filter:blur(18px); border-bottom:1px solid rgba(255,255,255,.06); }
+.ndc-suite-inner { width:min(1180px,calc(100% - 48px)); min-height:82px; margin-inline:auto; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.ndc-tools-page .ndc-suite-brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text); margin:0; }
+.ndc-tools-page .ndc-suite-brand img { width:48px; height:48px; object-fit:contain; }
+.ndc-brand-copy { font:500 13px/1.18 var(--heading); letter-spacing:.09em; }
+.ndc-tools-page .ndc-brand-copy strong { display:block; font:700 16px/1.18 var(--heading); letter-spacing:.16em; }
+.ndc-tools-page .ndc-brand-copy small { display:block; margin-top:5px; color:#b6a987; font:500 9px/1.4 var(--heading); letter-spacing:.18em; }
+.ndc-tools-page .ndc-suite-links { display:flex; align-items:center; gap:12px; }
+.ndc-tools-page .ndc-suite-links a { font:500 13px/1.5 var(--ui); text-decoration:none; color:#d1c7ae; border-radius:11px; padding:10px 16px; background:transparent; border:1px solid transparent; }
+.ndc-tools-page .ndc-suite-links a[aria-current="page"] { color:var(--highlight); background:var(--accent-bg); border-color:var(--accent-line); }
+.ndc-tools-page .ndc-suite-links a:hover { color:var(--gold); border-color:var(--accent-line); }
+.ndc-tools-page .ndc-suite-links .ndc-portfolio-link { border-color:var(--line); background:rgba(255,255,255,.035); gap:12px; }
+.ndc-tools-page .app-layout { width:min(1380px,calc(100% - 48px)); margin:48px auto 72px; display:grid; grid-template-columns:240px minmax(0,1fr); gap:30px; align-items:start; min-height:calc(100vh - 230px); }
+.ndc-tools-page .sidebar { min-width:0; padding:26px 16px; border:1px solid var(--line); border-radius:18px; background:var(--secondary); }
+.ndc-tools-page .sidebar h2 { font:600 21px/1.3 var(--heading); letter-spacing:-.035em; margin:0 12px 28px; }
+.ndc-tools-page .tool-section { margin-bottom:28px; }
+.ndc-tools-page .tool-section h3 { color:#b6a987; font:600 10px/1.5 var(--ui); letter-spacing:.14em; margin:0 12px 10px; }
+.ndc-tools-page .sidebar a { font:500 13px/1.6 var(--ui); min-height:46px; padding:11px 12px; border-radius:10px; color:var(--muted); }
+.ndc-tools-page .sidebar a.active { background:var(--accent-bg); border-color:var(--accent-line); color:var(--highlight); }
+.ndc-tools-page .workspace { padding:0; min-width:0; }
+.ndc-tools-page .workspace > .container { max-width:none; margin-bottom:24px; padding:36px; background:var(--secondary); border:1px solid var(--line); border-radius:22px; box-shadow:none; }
+.ndc-tools-page .workspace h1 { font:600 clamp(28px,3vw,40px)/1.15 var(--heading); letter-spacing:-.045em; margin:0 0 28px; }
+.ndc-tools-page .dropZone { min-height:210px; border-radius:16px; padding:32px; font:500 15px/1.7 var(--ui); background:var(--bg); }
+.ndc-tools-page .dropZone::before { background-color:var(--accent-bg); border-color:var(--accent-line); }
+.ndc-tools-page :is(input:not([type=checkbox]):not([type=range]),select,textarea) { font:400 14px/1.6 var(--ui); border-color:var(--line); border-radius:10px; background:var(--input-bg); }
+.ndc-tools-page button { font:600 14px/1.5 var(--ui); padding:13px 20px; border-radius:11px; min-height:46px; box-shadow:none; }
+.ndc-tools-page button:not(.remove-btn):not(.sort-btn):not(.img-sort-btn):hover:enabled { border-color:var(--gold); }
+.ndc-tools-page .input-group { margin:24px 0; }
+.ndc-tools-page label:not(.dropZone) { font:500 14px/1.65 var(--ui); }
+.ndc-tools-page .doc-section { padding:28px 32px; }
+.ndc-tools-page .doc-section li { font-size:14px; line-height:1.9; }
+.ndc-tools-page .status:not(:empty) { font:400 13px/1.8 var(--ui); border-radius:0 10px 10px 0; }
+.ndc-tools-page.ndc-chassis :is(.wrap,.app,.ndc-simple-tool) { width:min(1180px,calc(100% - 48px)); margin:64px auto; }
+.ndc-tools-page .ndc-page-heading { margin-bottom:30px; max-width:820px; }
+.ndc-tools-page .ndc-page-kicker { font:600 11px/1.6 var(--ui); color:var(--gold); letter-spacing:.15em; margin:0 0 16px; }
+.ndc-tools-page.ndc-chassis .ndc-page-heading h1 { font:600 clamp(32px,4vw,48px)/1.13 var(--heading); letter-spacing:-.05em; margin:0 0 18px; }
+.ndc-tools-page .ndc-page-description { font:400 16px/1.9 var(--ui); color:var(--muted); margin:0; }
+.ndc-tools-page.ndc-chassis .tool-nav { gap:6px; border-radius:13px; padding:6px; margin:0 0 32px; background:var(--secondary); border:1px solid var(--line); }
+.ndc-tools-page.ndc-chassis .tool-nav a { font:500 13px/1.5 var(--ui); padding:12px 18px; color:var(--muted); }
+.ndc-tools-page.ndc-chassis .tool-nav a[aria-current="page"] { background:var(--gold); color:#171207; }
+.ndc-tools-page.ndc-chassis :is(.panel,.controls,.ndc-sketch-controls,.ndc-sketch-preview) { background:var(--secondary); border:1px solid var(--line); border-radius:22px; padding:28px; }
+.ndc-tools-page.ndc-chassis .layout { grid-template-columns:minmax(280px,340px) minmax(0,1fr); gap:24px; }
+.ndc-tools-page.ndc-chassis .dropzone { font:500 15px/1.8 var(--ui); border-radius:14px; padding:56px 20px; background:var(--bg); }
+.ndc-tools-page.ndc-chassis :is(.ndc-sketch-controls,.ndc-sketch-preview) h2 { font:600 22px/1.3 var(--heading); letter-spacing:-.035em; }
+.ndc-tools-page.ndc-chassis .ndc-sketch-controls > p { font:400 14px/1.8 var(--ui); }
+.ndc-tools-page.ndc-chassis .ndc-sketch-preview { min-height:400px; }
+.ndc-tools-page.ndc-chassis .caution-notice { width:min(1180px,calc(100% - 48px)); margin:32px auto 64px; border-radius:16px; box-shadow:none; }
+.ndc-tools-page.ndc-chassis .caution-title { font:600 20px/1.4 var(--heading); letter-spacing:-.03em; }
+.ndc-tools-page.ndc-chassis .caution-description { font:400 13px/1.85 var(--ui); }
+.ndc-tools-page .bulk-workspace { max-width:1000px; padding:48px 24px; }
+.ndc-tools-page .contact { background:var(--secondary); border-color:var(--line); }
+.ndc-tools-page .contact-inner { max-width:1180px; margin:auto; }
+.ndc-tools-page .org-page { border-radius:14px; background:var(--card); }
+.ndc-tools-page .org-page button { min-height:30px; height:30px; width:30px; padding:5px; border-radius:7px; }
+@media(min-width:1100px) { .ndc-tools-page .sidebar { position:sticky; top:110px; max-height:calc(100vh - 136px); overflow:auto; } }
+@media(max-width:950px) { .ndc-tools-page .app-layout { grid-template-columns:200px minmax(0,1fr); gap:20px; } .ndc-tools-page .workspace > .container { padding:24px; } .ndc-tools-page.ndc-chassis .layout { grid-template-columns:1fr; } }
+@media(max-width:720px) { .ndc-suite-inner { flex-wrap:wrap; justify-content:center; padding:16px 0; gap:16px; } .ndc-tools-page .ndc-suite-links { width:100%; justify-content:center; flex-wrap:wrap; gap:6px; } .ndc-tools-page .ndc-suite-links a { padding:9px 12px; } .ndc-tools-page .app-layout { grid-template-columns:1fr; margin:28px auto; } .ndc-tools-page .sidebar { padding:20px; } .ndc-tools-page .tool-section ul { display:flex; flex-wrap:wrap; gap:5px; } .ndc-tools-page .tool-section { margin-bottom:16px; } .ndc-tools-page.ndc-chassis :is(.wrap,.app,.ndc-simple-tool) { margin:36px auto; } }
+@media(max-width:480px) { .ndc-suite-inner,.ndc-tools-page .app-layout,.ndc-tools-page.ndc-chassis :is(.wrap,.app,.ndc-simple-tool) { width:calc(100% - 32px); } .ndc-tools-page .workspace > .container { padding:20px; } .ndc-tools-page.ndc-chassis :is(.panel,.ndc-sketch-controls,.ndc-sketch-preview) { padding:20px; } }
+
+/* Header is self-contained on the standalone bulk-merger page too. */
+.ndc-tools-page .ndc-suite-links a { display:inline-flex; align-items:center; justify-content:center; gap:10px; margin:0; }
+.ndc-tools-page .ndc-suite-icon { display:block; width:18px; height:18px; flex-shrink:0; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.ndc-tools-page .ndc-suite-brand img { flex-shrink:0; }
