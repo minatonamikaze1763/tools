@@ -144,27 +144,12 @@
       }
     </style>
   <link rel="icon" type="image/png" href="../logo.png" />
-<link rel="stylesheet" href="../ndc-suite.css?v=540" />
+<link rel="stylesheet" href="../ndc-suite.css?v=541-type" />
 </head>
 
   <body class="ndc-chassis">
 <header class="ndc-suite-header"><a class="ndc-suite-brand" href="../index.html"><img src="../logo.png" width="44" height="44" alt="Next Dimension Customs logo"/><span><strong>NEXT DIMENSION CUSTOMS</strong><small>Document tools / NDC</small></span></a><nav class="ndc-suite-links" aria-label="NDC tools navigation"><a href="../index.html" ><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5Z"/><path d="M14 3v6h5M8 13h8m-8 4h6"/></svg>PDF Tools</a><a href="index.html" aria-current="page"><svg class="ndc-suite-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17-1 4 4-1L20 7l-3-3Zm10-10 3 3"/></svg>Chassis Tools</a></nav></header>
-    <main class="ndc-simple-tool"><h1>Image to Pencil Sketch</h1><nav class="tool-nav" aria-label="Chassis tool selection"><a href="index.html" >PDF & Pencil Scratch</a><a href="png.html" aria-current="page" class="active">Image to Pencil Sketch</a><a href="dotmatrix.html" >Dot Matrix</a></nav>
-
-    <input type="file" id="upload" accept="image/*" />
-
-    <br />
-    <a href="index.html" id="png" class="html">GO TO HOME </a>
-
-    <button onclick="convertSketch()">Convert To Pencil Sketch</button>
-
-    <button onclick="downloadPNG()">Download PNG</button>
-
-    <br />
-
-    <canvas id="canvas"></canvas>
-
-    </main>
+    <main class="ndc-simple-tool"><div class="ndc-page-heading"><p class="ndc-page-kicker">CHASSIS WORKSPACE</p><h1>Image to Pencil Sketch</h1><p class="ndc-page-description">Create a pencil-style PNG from your image. Preview the result, then download your copy.</p></div><nav class="tool-nav" aria-label="Chassis tool selection"><a href="index.html" >PDF & Pencil Scratch</a><a href="png.html" aria-current="page" class="active">Image to Pencil Sketch</a></nav><div class="ndc-sketch-layout"><section class="ndc-sketch-controls" aria-labelledby="sketchControlsTitle"><h2 id="sketchControlsTitle">Prepare your image</h2><p>Select an image to get started.</p><label class="ndc-upload-label" for="upload">Source image</label><input type="file" id="upload" accept="image/*" /><div class="ndc-sketch-actions"><button class="primary" onclick="convertSketch()">Convert to pencil sketch</button><button onclick="downloadPNG()">Download PNG</button></div><a href="index.html" id="png" class="ndc-back-link">Back to PDF editor</a></section><section class="ndc-sketch-preview" aria-labelledby="sketchPreviewTitle"><div class="ndc-preview-heading"><h2 id="sketchPreviewTitle">Preview</h2><span>PNG output</span></div><canvas id="canvas"></canvas></section></div></main>
     <script>
       const upload = document.getElementById("upload");
       const canvas = document.getElementById("canvas");

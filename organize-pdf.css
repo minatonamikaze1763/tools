@@ -1,0 +1,25 @@
+/* Page organization UI, scoped to this tool. */
+.org-tool .org-description { color:var(--muted); font-size:14px; margin:0 0 24px; }
+.org-tool .org-toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin:24px 0 12px; }
+.org-toolbar > span { color:var(--muted); font-size:13px; }
+.org-toolbar > div { display:flex; gap:10px; flex-wrap:wrap; }
+.org-tool .org-toolbar button { width:auto; margin:0; font-size:13px; min-height:42px; }
+.org-tool #orgRestore { background:var(--secondary); color:var(--ink); border:1px solid var(--line); }
+.org-tool #orgStatus { min-height:24px; color:var(--muted); font-size:13px; overflow-wrap:anywhere; }
+.org-tool #orgStatus[data-error="true"] { color:#ff9090; }
+.org-pages { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:18px; margin-top:24px; align-items:start; }
+.org-page { min-width:0; border:1px solid var(--line); background:var(--card); border-radius:12px; overflow:hidden; }
+.org-page[hidden] { display:none; }
+.org-page-top { display:flex; align-items:center; gap:8px; padding:10px; }
+.org-page-top strong { font:600 11px/1.5 var(--ui); flex:1; }
+.org-drag { cursor:grab; padding:3px; color:var(--gold); font-size:21px; touch-action:none; }
+.org-tool .org-page button { width:30px; min-width:30px; height:30px; padding:5px; margin:0; border:1px solid var(--line); background:var(--secondary); color:var(--ink); border-radius:6px; font-size:16px; display:inline-flex; align-items:center; justify-content:center; }
+.org-page button svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.org-tool .org-page button[data-action="delete"] { color:#ff9090; }
+.org-tool button:disabled { opacity:.45; cursor:not-allowed; }
+.org-canvas { padding:12px; min-height:230px; display:flex; align-items:center; justify-content:center; background:var(--secondary); }
+.org-canvas canvas { display:block; max-width:100%; max-height:300px; width:auto; height:auto; background:white; box-shadow:0 4px 16px #0004; }
+.org-page-bottom { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px; }
+.org-position { color:var(--muted); font-size:11px; }
+.org-ghost { opacity:.4; border-color:var(--gold); }
+@media(max-width:480px) { .org-pages { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .org-page-top { padding:7px; gap:4px; } .org-page-top strong { font-size:10px; } .org-canvas { padding:8px; min-height:170px; } .org-toolbar > div { width:100%; } .org-tool .org-toolbar button { flex:1; } }

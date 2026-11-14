@@ -170,16 +170,14 @@ Generate PDF
   `,
 
   organizer: `
-    <div class="container">
-      <h1>PDF Organizer</h1>
-      <p>Add, Delete, Rotate, or Reorder Pages</p>
-      <input type="file" id="pdfOrgFile" accept=".pdf" />
-      <div id="organizeTools">
-        <button id="addPage">Add Page</button>
-        <button id="deletePage">Delete Page</button>
-        <button id="rotatePage">Rotate</button>
-        <button id="reorderPage">Reorder</button>
-      </div>
+    <div class="container org-tool" id="ndcOrganizer">
+      <h1><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Organize PDF</h1>
+      <p class="org-description">Drag pages to arrange them. Delete unwanted pages, then download your updated PDF.</p>
+      <label class="dropZone" id="orgDrop" for="orgFile">Drag &amp; drop a PDF here, or click to choose</label>
+      <input type="file" id="orgFile" accept=".pdf,application/pdf" />
+      <div class="org-toolbar"><span id="orgCount">No PDF selected</span><div><button type="button" id="orgRestore" disabled>Restore all pages</button><button type="button" id="orgDownload" disabled>Download organized PDF</button></div></div>
+      <p id="orgStatus" class="status" role="status" aria-live="polite">Select one PDF to see a live preview of every page.</p>
+      <div id="orgPages" class="org-pages" aria-label="PDF pages in output order"></div>
     </div>
   `,
   compressPdf: `
@@ -237,6 +235,8 @@ Generate PDF
 
 // ========= Initialization ==========
 function loadTool(toolName) {
+  window.ndcOrganizerCleanup?.();
+  window.ndcOrganizerCleanup = null;
   workspace.innerHTML =
     tools[toolName] + docSection ||
     `<div class="container"><h1>Tool Coming Soon!</h1></div>`;
@@ -1405,26 +1405,7 @@ async function initPdfEditor() {
 }
 
 function initOrganizer() {
-  document
-    .getElementById("addPage")
-    .addEventListener("click", () =>
-      alert("Add Page feature not implemented yet."),
-    );
-  document
-    .getElementById("deletePage")
-    .addEventListener("click", () =>
-      alert("Delete Page feature not implemented yet."),
-    );
-  document
-    .getElementById("rotatePage")
-    .addEventListener("click", () =>
-      alert("Rotate feature not implemented yet."),
-    );
-  document
-    .getElementById("reorderPage")
-    .addEventListener("click", () =>
-      alert("Reorder feature not implemented yet."),
-    );
+  window.ndcOrganizerCleanup = NDCOrganizer.init();
 }
 
 const dropZones = document.querySelectorAll(".dropZone");
