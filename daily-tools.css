@@ -1,0 +1,29 @@
+/* Daily utilities use the NDC portfolio typography and color tokens. */
+.ndc-tools-page .ndc-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:18px 0; }
+.ndc-tools-page .ndc-actions button { margin:0; width:auto; }
+.ndc-tools-page .workspace .container > button { margin-top:8px; margin-bottom:8px; }
+.ndc-tools-page .workspace .container > button + button { margin-left:10px; }
+.daily-tool .daily-eyebrow { font:600 10px/1.6 var(--ui); color:var(--gold); letter-spacing:.14em; margin:0 0 14px; }
+.daily-tool .daily-description { color:var(--muted); font-size:15px; line-height:1.8; margin:0 0 28px; }
+.daily-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.daily-fields > .input-group { min-width:0; }
+.daily-tool textarea { display:block; width:100%; min-height:220px; resize:vertical; padding:16px; background:var(--bg); border:1px solid var(--line); border-radius:12px; color:var(--text); font:400 14px/1.8 var(--ui); }
+.daily-tool[data-daily="jsonTools"] textarea { font-family:ui-monospace,Consolas,monospace; }
+.daily-tool .daily-help { font-size:12px; color:var(--muted); line-height:1.8; }
+.daily-tool .daily-check { display:flex; gap:10px; align-items:center; margin:18px 0; }
+.daily-tool hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+.daily-tool .status[data-error="true"] { border-color:#ff9090; color:#ffb0b0; }
+.daily-result:not(:empty) { display:block; margin:24px 0; padding:20px; font:600 22px/1.5 var(--heading); color:var(--highlight); background:var(--accent-bg); border:1px solid var(--accent-line); border-radius:12px; }
+.daily-file-list { max-width:100%; overflow:auto; }
+.daily-file-list table { width:100%; border-collapse:collapse; font-size:12px; }
+.daily-file-list td { padding:12px; border-bottom:1px solid var(--line); text-align:left; overflow-wrap:anywhere; }
+.daily-file-list td:first-child { color:var(--muted); }
+.daily-file-list td:last-child { color:var(--highlight); }
+.daily-image-preview img { display:block; max-width:100%; max-height:300px; object-fit:contain; margin:24px auto; border:1px solid var(--line); border-radius:12px; }
+.ndc-tools-page .sidebar #ndcToolSearch { font-size:12px; min-height:40px; padding:9px 10px; margin:8px 0; }
+.daily-search-label { display:block; padding:0 4px; color:var(--muted); font-size:11px; }
+.daily-search-status { font-size:11px; margin:0 4px 16px; color:var(--muted); }
+.sidebar [hidden] { display:none !important; }
+@media(max-width:650px) { .daily-fields { grid-template-columns:1fr; gap:0; } .ndc-tools-page .ndc-actions { gap:10px; } .ndc-tools-page .ndc-actions button { flex:1 1 auto; } }
+
+.daily-file-list th { padding:10px 12px; text-align:left; font-size:11px; font-weight:600; color:var(--muted); border-bottom:1px solid var(--line); }

@@ -8,7 +8,7 @@
       content="All-in-one PDF Tool - Convert, Edit, Organize, and Merge PDFs easily."
     />
     <meta name="author" content="Nandhu" />
-    <title>PDF Tools | Next Dimension Customs</title>
+    <title>Daily Tools | Next Dimension Customs</title>
     <!-- 🔹 Libraries -->
     <link
       rel="stylesheet"
@@ -59,6 +59,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="ndc-portfolio.css?v=2-contact" />
+<link rel="stylesheet" href="daily-tools.css?v=1" />
 </head>
 
   <body class="ndc-tools-page">
@@ -67,8 +68,8 @@
     <div class="app-layout">
       <!-- ✅ Sidebar -->
 
-      <nav class="sidebar" aria-label="PDF tools">
-        <h2><i class="fa-solid fa-file-pdf"></i> PDF Tools</h2>
+      <nav class="sidebar" aria-label="Document and daily tools">
+        <h2><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Everyday Tools</h2><label class="daily-search-label" for="ndcToolSearch">Find a tool</label><input id="ndcToolSearch" type="search" placeholder="Search PDF, image, text…" /><p id="ndcToolSearchStatus" class="daily-search-status" role="status" aria-live="polite"></p>
 
         <div class="tool-section">
           <h3>Organize PDFs</h3>
@@ -141,6 +142,7 @@
             </li>
           </ul>
         </div>
+<div class="tool-section"><h3>PDF Essentials</h3><ul><li><a href="#" data-tool="extractPages"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Extract PDF Pages</a></li><li><a href="#" data-tool="rotatePages"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Rotate PDF</a></li></ul></div><div class="tool-section"><h3>Image Tools</h3><ul><li><a href="#" data-tool="resizeImage"><i class="fa-solid fa-expand" aria-hidden="true"></i> Resize Images</a></li><li><a href="#" data-tool="convertImage"><i class="fa-solid fa-images" aria-hidden="true"></i> Convert Images</a></li></ul></div><div class="tool-section"><h3>Text &amp; Data</h3><ul><li><a href="#" data-tool="textTools"><i class="fa-solid fa-font" aria-hidden="true"></i> Text Toolkit</a></li><li><a href="#" data-tool="replaceText"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Find &amp; Replace</a></li><li><a href="#" data-tool="jsonTools"><i class="fa-solid fa-code" aria-hidden="true"></i> JSON Formatter</a></li></ul></div><div class="tool-section"><h3>Dates &amp; Files</h3><ul><li><a href="#" data-tool="dateTools"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Date Calculator</a></li><li><a href="#" data-tool="fileSorter"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i> File Sorter</a></li><li><a href="#" data-tool="batchRename"><i class="fa-solid fa-pen" aria-hidden="true"></i> Rename Assistant</a></li></ul></div>
         <a href="rc.html"
           ><i class="fa-solid fa-code-merge"></i> Rc Merge PDFs</a
         >
@@ -208,6 +210,7 @@
     </div>
 
     <script src="organize-pdf.js?v=1"></script>
+    <script src="daily-tools.js?v=1"></script>
     <script src="script.js"></script>
     <footer id="contact" class="contact" aria-labelledby="contact-title">
       <div class="contact-inner">

@@ -233,8 +233,13 @@ Generate PDF
 `,
 };
 
+Object.assign(tools, NDCDaily.templates);
+
 // ========= Initialization ==========
 function loadTool(toolName) {
+  window.ndcDailyCleanup?.();
+  window.ndcDailyCleanup = null;
+  if (!Object.hasOwn(tools, toolName)) toolName = "merge";
   window.ndcOrganizerCleanup?.();
   window.ndcOrganizerCleanup = null;
   workspace.innerHTML =
@@ -310,6 +315,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 // ========= Tool Initializers ==========
 function initTool(name) {
+  if (NDCDaily.has(name)) { window.ndcDailyCleanup = NDCDaily.init(name); return; }
   switch (name) {
     case "merge":
       initMerge();
@@ -1962,6 +1968,7 @@ async function initAllMerge() {
   //---------------------------------
 
   const controls = document.createElement("div");
+  controls.className = "ndc-actions";
 
   controls.innerHTML = `
         <button id="sortAZ">Sort A-Z</button>
