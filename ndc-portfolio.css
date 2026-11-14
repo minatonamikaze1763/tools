@@ -81,3 +81,21 @@ body.ndc-tools-page { margin:0; padding:0; display:block; background:var(--bg); 
 .ndc-tools-page .ndc-suite-links a { display:inline-flex; align-items:center; justify-content:center; gap:10px; margin:0; }
 .ndc-tools-page .ndc-suite-icon { display:block; width:18px; height:18px; flex-shrink:0; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 .ndc-tools-page .ndc-suite-brand img { flex-shrink:0; }
+
+/* Shared edge alignment: each page's navigation, body and contact use one width. */
+body.ndc-tools-page { --suite-max:1380px; --suite-gutter:48px; }
+body.ndc-tools-page.ndc-chassis { --suite-max:1180px; }
+body.ndc-tools-page.bulk-page { --suite-max:1000px; }
+.ndc-tools-page .ndc-suite-inner,.ndc-tools-page .app-layout,.ndc-tools-page .contact-inner { width:min(var(--suite-max),calc(100% - var(--suite-gutter))); max-width:none; margin-inline:auto; }
+.ndc-tools-page.ndc-chassis :is(.wrap,.app,.ndc-simple-tool) { width:min(var(--suite-max),calc(100% - var(--suite-gutter))); }
+.ndc-tools-page .contact { display:block; width:100%; margin:0; padding:0; border-top:1px solid var(--line); background:var(--secondary); }
+.ndc-tools-page .contact-inner { padding:56px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:28px; }
+.ndc-tools-page .contact h2 { margin:0 0 10px; font:600 clamp(24px,2.6vw,34px)/1.2 var(--heading); letter-spacing:-.04em; }
+.ndc-tools-page .contact p { margin:0 0 12px; color:var(--muted); font:400 14px/1.8 var(--ui); }
+.ndc-tools-page .contact-email,.ndc-tools-page .ndc-contact-phone { display:block; margin:0; color:var(--muted); font:400 14px/1.8 var(--ui); text-decoration:none; overflow-wrap:anywhere; }
+.ndc-tools-page .contact-site { display:flex; align-items:center; gap:24px; padding:18px 22px; background:var(--card); color:var(--text); border:1px solid var(--accent-line); border-radius:14px; text-decoration:none; }
+.ndc-tools-page .contact-site small { display:block; color:var(--muted); font:400 12px/1.6 var(--ui); }
+.ndc-tools-page .contact-site strong { display:block; font:600 14px/1.6 var(--heading); overflow-wrap:anywhere; }
+.ndc-tools-page .contact a:hover { color:var(--highlight); }
+.ndc-tools-page .contact .ndc-suite-icon { width:18px; height:18px; color:var(--gold); }
+@media(max-width:480px) { body.ndc-tools-page { --suite-gutter:32px; } .ndc-tools-page .contact-inner { padding-block:36px; } .ndc-tools-page .contact-site { max-width:100%; } }
